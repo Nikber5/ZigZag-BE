@@ -1,4 +1,4 @@
-package com.marber.auction.model;
+package com.zigzag.auction.model;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;

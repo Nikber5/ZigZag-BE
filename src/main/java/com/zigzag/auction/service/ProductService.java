@@ -1,6 +1,6 @@
-package com.marber.auction.service;
+package com.zigzag.auction.service;
 
-import com.marber.auction.model.Product;
+import com.zigzag.auction.model.Product;
 
 public interface ProductService extends AbstractCRUDService<Product, Long> {
 

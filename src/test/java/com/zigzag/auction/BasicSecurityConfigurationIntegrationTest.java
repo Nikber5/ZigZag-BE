@@ -1,4 +1,4 @@
-package com.marber.auction;
+package com.zigzag.auction;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -34,7 +34,7 @@ public class BasicSecurityConfigurationIntegrationTest {
 
     @Test
     public void whenLoggedUserRequestsHomePage_ThenSuccess()
-     throws IllegalStateException, IOException {
+     throws IllegalStateException {
         ResponseEntity<String> response =
           restTemplate.getForEntity(base.toString(), String.class);
  
@@ -43,8 +43,7 @@ public class BasicSecurityConfigurationIntegrationTest {
     }
 
     @Test
-    public void whenUserWithWrongCredentials_thenUnauthorizedPage() 
-      throws Exception {
+    public void whenUserWithWrongCredentials_thenUnauthorizedPage() {
  
         restTemplate = new TestRestTemplate("user", "wrongpassword");
         ResponseEntity<String> response =

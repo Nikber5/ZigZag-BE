@@ -1,12 +1,11 @@
-package com.marber.auction.util;
+package com.zigzag.auction.util;
 
-import com.marber.auction.model.Product;
-import com.marber.auction.model.User;
-import com.marber.auction.service.ProductService;
-import com.marber.auction.service.UserService;
+import com.zigzag.auction.model.Product;
+import com.zigzag.auction.model.User;
+import com.zigzag.auction.service.ProductService;
+import com.zigzag.auction.service.UserService;
 import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
-import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -34,6 +33,5 @@ public class DataInitializer {
         userService.create(alice);
 
         System.out.println(userService.get(bob.getId()));
-        System.out.println(userService.get(100L));
     }
 }

@@ -1,7 +1,7 @@
-package com.marber.auction.controller;
+package com.zigzag.auction.controller;
 
-import com.marber.auction.model.User;
-import com.marber.auction.service.UserService;
+import com.zigzag.auction.model.User;
+import com.zigzag.auction.service.UserService;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

@@ -1,6 +1,5 @@
-package com.marber.auction.service;
+package com.zigzag.auction.service;
 
-import com.marber.auction.model.User;
 import java.util.List;
 
 public interface AbstractCRUDService<T, Id> {

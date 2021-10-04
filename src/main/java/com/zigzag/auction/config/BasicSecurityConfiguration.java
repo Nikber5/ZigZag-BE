@@ -1,4 +1,4 @@
-package com.marber.auction.config;
+package com.zigzag.auction.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;

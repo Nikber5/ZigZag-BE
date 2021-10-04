@@ -1,6 +1,6 @@
-package com.marber.auction.repository;
+package com.zigzag.auction.repository;
 
-import com.marber.auction.model.User;
+import com.zigzag.auction.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface UserRepository extends JpaRepository<User, Long> {

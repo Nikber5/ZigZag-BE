@@ -1,7 +1,7 @@
-package com.marber.auction.service;
+package com.zigzag.auction.service;
 
-import com.marber.auction.model.User;
-import com.marber.auction.repository.UserRepository;
+import com.zigzag.auction.model.User;
+import com.zigzag.auction.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import java.util.List;
 

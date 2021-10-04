@@ -1,4 +1,4 @@
-package com.marber.auction;
+package com.zigzag.auction;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
