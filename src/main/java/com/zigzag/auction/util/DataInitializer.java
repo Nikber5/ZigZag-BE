@@ -11,11 +11,9 @@ import java.util.List;
 @Component
 public class DataInitializer {
     private final UserService userService;
-    private final ProductService productService;
 
-    public DataInitializer(UserService userService, ProductService productService) {
+    public DataInitializer(UserService userService) {
         this.userService = userService;
-        this.productService = productService;
     }
 
     @PostConstruct
@@ -23,8 +21,6 @@ public class DataInitializer {
         Product iphone  = new Product("iphone", "new IOS phone");
         Product xiaomi  = new Product("xiaomi", "new android phone");
         List<Product> products = List.of(iphone, xiaomi);
-        productService.create(iphone);
-        productService.create(xiaomi);
 
         User bob = new User("Bob", "bob@gmail.com");
         bob.setProducts(products);
