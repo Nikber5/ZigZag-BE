@@ -1,10 +1,13 @@
 package com.zigzag.auction.model;
 
+import org.hibernate.annotations.Cascade;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "user_table")
@@ -15,9 +18,11 @@ public class User extends AbstractEntity {
     private String password;
     //private Set<Role> roles;
     //private List<Lot> lots;
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     private List<Product> products;
-    //private List<Bid> bids;
+
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "owner", cascade = CascadeType.REMOVE)
+    private Set<Bid> bids;
 
     public User() {
     }
@@ -75,13 +80,13 @@ public class User extends AbstractEntity {
         this.products = products;
     }
 
-    /*public List<Bid> getBids() {
+    public Set<Bid> getBids() {
         return bids;
     }
 
-    public void setBids(List<Bid> bids) {
+    public void setBids(Set<Bid> bids) {
         this.bids = bids;
-    }*/
+    }
 
     @Override
     public String toString() {
@@ -91,7 +96,8 @@ public class User extends AbstractEntity {
                 ", secondName='" + secondName + '\'' +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
-                ", products=" + products +
+                ", products=" + products + '\'' +
+                ", bids=" + bids +
                 '}';
     }
 }
