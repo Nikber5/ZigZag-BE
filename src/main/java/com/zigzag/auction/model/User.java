@@ -21,7 +21,7 @@ public class User extends AbstractEntity {
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<Role> roles;
     //private List<Lot> lots;
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    @OneToMany(cascade = CascadeType.REMOVE)
     private List<Product> products;
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "owner", cascade = CascadeType.REMOVE)

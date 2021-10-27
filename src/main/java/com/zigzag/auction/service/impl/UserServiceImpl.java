@@ -54,4 +54,10 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new DataProcessingException("Can't get user by email: " + email));
     }
+
+    @Override
+    public User getUserWithProductsByEmail(String email) {
+        return userRepository.getUserWithProductsByEmail(email)
+                .orElseThrow(() -> new DataProcessingException("Can't get user by email with products: " + email));
+    }
 }
