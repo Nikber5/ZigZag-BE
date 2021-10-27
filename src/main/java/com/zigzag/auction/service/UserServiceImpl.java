@@ -1,24 +1,28 @@
 package com.zigzag.auction.service;
 
+import com.zigzag.auction.exception.DataProcessingException;
 import com.zigzag.auction.model.Bid;
 import com.zigzag.auction.model.Product;
 import com.zigzag.auction.model.User;
 import com.zigzag.auction.repository.BidRepository;
 import com.zigzag.auction.repository.ProductRepository;
 import com.zigzag.auction.repository.UserRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Set;
 
 @Service
 public class UserServiceImpl implements UserService {
+    private final PasswordEncoder encoder;
     private final UserRepository userRepository;
     private final ProductRepository productRepository;
     private final BidRepository bidRepository;
 
-    public UserServiceImpl(UserRepository userRepository,
+    public UserServiceImpl(PasswordEncoder encoder, UserRepository userRepository,
                            ProductRepository productRepository,
                            BidRepository bidRepository) {
+        this.encoder = encoder;
         this.userRepository = userRepository;
         this.productRepository = productRepository;
         this.bidRepository = bidRepository;
@@ -26,7 +30,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User get(Long id) {
-        return userRepository.findById(id).get();
+        return userRepository.findById(id)
+                .orElseThrow(() -> new DataProcessingException("Can't get user by id: " + id));
     }
 
     @Override
@@ -36,6 +41,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User create(User user) {
+        user.setPassword(encoder.encode(user.getPassword()));
         List<Product> products = user.getProducts();
         if (products != null) {
             products.forEach(productRepository::save);
@@ -63,5 +69,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public void delete(Long id) {
         userRepository.deleteById(id);
+    }
+
+    @Override
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new DataProcessingException("Can't get user by email: " + email));
     }
 }

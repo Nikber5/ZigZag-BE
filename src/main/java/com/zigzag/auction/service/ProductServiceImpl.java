@@ -1,5 +1,6 @@
 package com.zigzag.auction.service;
 
+import com.zigzag.auction.exception.DataProcessingException;
 import com.zigzag.auction.model.Product;
 import com.zigzag.auction.repository.ProductRepository;
 import org.springframework.stereotype.Service;
@@ -16,7 +17,8 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product get(Long id) {
-        return productRepository.findById(id).get();
+        return productRepository.findById(id)
+                .orElseThrow(() -> new DataProcessingException("Can't get product by id: " + id));
     }
 
     @Override

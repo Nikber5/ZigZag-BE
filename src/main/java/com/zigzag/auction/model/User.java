@@ -4,6 +4,7 @@ import org.hibernate.annotations.Cascade;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.util.List;
@@ -16,7 +17,9 @@ public class User extends AbstractEntity {
     private String secondName;
     private String email;
     private String password;
-    //private Set<Role> roles;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    private Set<Role> roles;
     //private List<Lot> lots;
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     private List<Product> products;
@@ -27,9 +30,10 @@ public class User extends AbstractEntity {
     public User() {
     }
 
-    public User(String firstName, String email) {
+    public User(String firstName, String email, String password) {
         this.firstName = firstName;
         this.email = email;
+        this.password = password;
     }
 
     public String getFirstName() {
@@ -71,6 +75,14 @@ public class User extends AbstractEntity {
     public void setLots(List<Lot> lots) {
         this.lots = lots;
     }*/
+
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
 
     public List<Product> getProducts() {
         return products;
