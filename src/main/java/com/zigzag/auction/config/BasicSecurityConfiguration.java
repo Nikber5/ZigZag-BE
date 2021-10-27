@@ -31,7 +31,9 @@ public class BasicSecurityConfiguration extends WebSecurityConfigurerAdapter {
         http
                 .authorizeRequests()
                 .antMatchers(HttpMethod.GET, "/index").permitAll()
+                .antMatchers(HttpMethod.POST, "/register").permitAll()
                 .antMatchers(HttpMethod.GET, "/users").hasRole("ADMIN")
+                .antMatchers(HttpMethod.PUT, "/users/update").hasRole("USER")
                 .anyRequest()
                 .authenticated()
                 .and()

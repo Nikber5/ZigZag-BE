@@ -1,13 +1,13 @@
-package com.zigzag.auction.service;
+package com.zigzag.auction.service.impl;
 
 import com.zigzag.auction.exception.DataProcessingException;
 import com.zigzag.auction.model.Product;
 import com.zigzag.auction.repository.ProductRepository;
+import com.zigzag.auction.service.ProductService;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-@Deprecated
 public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
 

@@ -1,8 +1,9 @@
-package com.zigzag.auction.service;
+package com.zigzag.auction.service.impl;
 
 import com.zigzag.auction.exception.DataProcessingException;
 import com.zigzag.auction.model.Role;
 import com.zigzag.auction.repository.RoleRepository;
+import com.zigzag.auction.service.RoleService;
 import org.springframework.stereotype.Service;
 
 @Service

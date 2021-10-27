@@ -1,7 +1,8 @@
-package com.zigzag.auction.service;
+package com.zigzag.auction.service.impl;
 
 import com.zigzag.auction.exception.DataProcessingException;
 import com.zigzag.auction.model.User;
+import com.zigzag.auction.service.UserService;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

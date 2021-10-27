@@ -1,31 +1,25 @@
-package com.zigzag.auction.service;
+package com.zigzag.auction.service.impl;
 
 import com.zigzag.auction.exception.DataProcessingException;
-import com.zigzag.auction.model.Bid;
-import com.zigzag.auction.model.Product;
 import com.zigzag.auction.model.User;
 import com.zigzag.auction.repository.BidRepository;
 import com.zigzag.auction.repository.ProductRepository;
 import com.zigzag.auction.repository.UserRepository;
+import com.zigzag.auction.service.UserService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.List;
-import java.util.Set;
 
 @Service
 public class UserServiceImpl implements UserService {
     private final PasswordEncoder encoder;
     private final UserRepository userRepository;
-    private final ProductRepository productRepository;
-    private final BidRepository bidRepository;
 
     public UserServiceImpl(PasswordEncoder encoder, UserRepository userRepository,
                            ProductRepository productRepository,
                            BidRepository bidRepository) {
         this.encoder = encoder;
         this.userRepository = userRepository;
-        this.productRepository = productRepository;
-        this.bidRepository = bidRepository;
     }
 
     @Override
@@ -42,28 +36,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public User create(User user) {
         user.setPassword(encoder.encode(user.getPassword()));
-        List<Product> products = user.getProducts();
-        if (products != null) {
-            products.forEach(productRepository::save);
-        }
-        userRepository.save(user);
-        Set<Bid> bids = user.getBids();
-        if (bids != null) {
-            bids.forEach(b -> b.setOwner(user));
-            bids.forEach(bidRepository::save);
-        }
-        return user;
+        return userRepository.save(user);
     }
 
     @Override
     public User update(User user) {
-        userRepository.save(user);
-        Set<Bid> bids = user.getBids();
-        if (bids != null) {
-            bids.forEach(b -> b.setOwner(user));
-            bids.forEach(bidRepository::save);
-        }
-        return user;
+        return userRepository.save(user);
     }
 
     @Override
