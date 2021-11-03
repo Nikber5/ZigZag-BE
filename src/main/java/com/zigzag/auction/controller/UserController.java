@@ -5,13 +5,14 @@ import com.zigzag.auction.dto.response.UserResponseDto;
 import com.zigzag.auction.model.User;
 import com.zigzag.auction.service.UserService;
 import com.zigzag.auction.service.mapper.UserMapper;
+import com.zigzag.auction.util.RoleUtil;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,6 +32,7 @@ public class UserController {
     }
 
     @GetMapping
+    @Secured(RoleUtil.ROLE_ADMIN)
     public List<User> getAll() {
         return userService.getAll();
     }
@@ -40,17 +42,8 @@ public class UserController {
         return userService.get(id);
     }
 
-    @PostMapping
-    public User create(@RequestBody User user) {
-        return userService.create(user);
-    }
-
-    @PutMapping
-    public User update(@RequestBody User user) {
-        return userService.update(user);
-    }
-
     @PutMapping("/update")
+    @Secured(RoleUtil.ROLE_USER)
     public UserResponseDto update(@RequestBody UserRequestDto dto, Authentication auth) {
         UserDetails details = (UserDetails) auth.getPrincipal();
         User user = userService.findByEmail(details.getUsername());
@@ -69,12 +62,14 @@ public class UserController {
     }
 
     @DeleteMapping
+    @Secured(RoleUtil.ROLE_ADMIN)
     public String delete(@PathVariable Long id) {
         userService.delete(id);
         return "Done";
     }
 
     @GetMapping("/by-email")
+    @Secured(RoleUtil.ROLE_ADMIN)
     public User getByEmail(@RequestParam String email) {
         System.out.println("Getting user by email " + email);
         return userService.findByEmail(email);
