@@ -2,8 +2,8 @@ package com.zigzag.auction.service;
 
 import java.util.List;
 
-public interface AbstractCRUDService<T, Id> {
-    T get(Id id);
+public interface AbstractCrudService<T, I> {
+    T get(I id);
 
     List<T> getAll();
 
@@ -11,5 +11,5 @@ public interface AbstractCRUDService<T, Id> {
 
     T update(T entity);
 
-    void delete(Id id);
+    void delete(I id);
 }

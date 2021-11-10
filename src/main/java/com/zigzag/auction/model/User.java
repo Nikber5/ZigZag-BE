@@ -1,13 +1,13 @@
 package com.zigzag.auction.model;
 
-import org.hibernate.annotations.Cascade;
+import java.util.List;
+import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import java.util.List;
-import java.util.Set;
 
 @Entity
 @Table(name = "user_table")
@@ -16,10 +16,14 @@ public class User extends AbstractEntity {
     private String secondName;
     private String email;
     private String password;
-    //private Set<Role> roles;
-    //private List<Lot> lots;
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    private Set<Role> roles;
+
+    @OneToMany(cascade = CascadeType.REMOVE)
     private List<Product> products;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "creator")
+    private List<Lot> lots;
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "owner", cascade = CascadeType.REMOVE)
     private Set<Bid> bids;
@@ -27,9 +31,10 @@ public class User extends AbstractEntity {
     public User() {
     }
 
-    public User(String firstName, String email) {
+    public User(String firstName, String email, String password) {
         this.firstName = firstName;
         this.email = email;
+        this.password = password;
     }
 
     public String getFirstName() {
@@ -64,13 +69,21 @@ public class User extends AbstractEntity {
         this.password = password;
     }
 
-    /*public List<Lot> getLots() {
+    public List<Lot> getLots() {
         return lots;
     }
 
     public void setLots(List<Lot> lots) {
         this.lots = lots;
-    }*/
+    }
+
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
 
     public List<Product> getProducts() {
         return products;
@@ -90,14 +103,15 @@ public class User extends AbstractEntity {
 
     @Override
     public String toString() {
-        return "User{" +
-                "id='" + super.getId() + '\'' +
-                ", firstName='" + firstName + '\'' +
-                ", secondName='" + secondName + '\'' +
-                ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                ", products=" + products + '\'' +
-                ", bids=" + bids +
-                '}';
+        return "User{"
+                + "id='" + super.getId() + '\''
+                + ", firstName='" + firstName + '\''
+                + ", secondName='" + secondName + '\''
+                + ", email='" + email + '\''
+                + ", password='" + password + '\''
+                + ", products=" + products + '\''
+                + ", bids="
+                + bids
+                + '}';
     }
 }

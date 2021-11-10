@@ -1,12 +1,10 @@
 package com.zigzag.auction.model;
 
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
+import java.math.BigInteger;
+import java.time.LocalDateTime;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import java.math.BigInteger;
-import java.time.LocalDateTime;
 
 @Entity
 public class Bid extends AbstractEntity {
@@ -14,10 +12,10 @@ public class Bid extends AbstractEntity {
     private BigInteger bidSum;
     @ManyToOne
     @JoinColumn(nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
     private User owner;
-    //lot: Lot
-
+    @ManyToOne
+    @JoinColumn(nullable = false)
+    private Lot lot;
 
     public Bid() {
     }
@@ -51,12 +49,20 @@ public class Bid extends AbstractEntity {
         this.owner = owner;
     }
 
+    public Lot getLot() {
+        return lot;
+    }
+
+    public void setLot(Lot lot) {
+        this.lot = lot;
+    }
+
     @Override
     public String toString() {
-        return "Bid{" +
-                "id='" + super.getId() + '\'' +
-                ", betTime=" + betTime +
-                ", bidSum=" + bidSum +
-                '}';
+        return "Bid{"
+                + "id='" + super.getId() + '\''
+                + ", betTime=" + betTime
+                + ", bidSum=" + bidSum
+                + '}';
     }
 }
