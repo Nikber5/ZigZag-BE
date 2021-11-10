@@ -13,8 +13,9 @@ public class Bid extends AbstractEntity {
     @ManyToOne
     @JoinColumn(nullable = false)
     private User owner;
-    //lot: Lot
-
+    @ManyToOne
+    @JoinColumn(nullable = false)
+    private Lot lot;
 
     public Bid() {
     }
@@ -46,6 +47,14 @@ public class Bid extends AbstractEntity {
 
     public void setOwner(User owner) {
         this.owner = owner;
+    }
+
+    public Lot getLot() {
+        return lot;
+    }
+
+    public void setLot(Lot lot) {
+        this.lot = lot;
     }
 
     @Override

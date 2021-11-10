@@ -4,6 +4,7 @@ import com.zigzag.auction.dto.response.LotResponseDto;
 import com.zigzag.auction.model.Lot;
 import com.zigzag.auction.model.Product;
 import com.zigzag.auction.model.User;
+import com.zigzag.auction.service.BidService;
 import com.zigzag.auction.service.LotService;
 import com.zigzag.auction.service.UserService;
 import com.zigzag.auction.service.mapper.LotMapper;
@@ -13,6 +14,7 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -29,11 +31,14 @@ public class LotController {
     private final UserService userService;
     private final LotService lotService;
     private final LotMapper mapper;
+    private final BidService bidService;
 
-    public LotController(UserService userService, LotService lotService, LotMapper mapper) {
+    public LotController(UserService userService, LotService lotService,
+                         LotMapper mapper, BidService bidService) {
         this.userService = userService;
         this.lotService = lotService;
         this.mapper = mapper;
+        this.bidService = bidService;
     }
 
     @GetMapping
@@ -41,6 +46,11 @@ public class LotController {
         return lotService.getAll().stream()
                 .map(mapper::mapToDto)
                 .collect(Collectors.toList());
+    }
+
+    @GetMapping("/{id}")
+    public LotResponseDto get(@PathVariable Long id) {
+        return mapper.mapToDto(lotService.get(id));
     }
 
     @PostMapping("/create")
@@ -60,5 +70,16 @@ public class LotController {
         Lot lot = new Lot(user, product, LocalDateTime.now(),
                 LocalDateTime.now().plusDays(TimeUtil.DEFAULT_LOT_DURATION_DAYS), startPrice, true);
         return mapper.mapToDto(lotService.create(lot));
+    }
+
+    @PostMapping("/{lotId}/makeABet")
+    @Secured(RoleUtil.ROLE_USER)
+    public LotResponseDto makeABet(Authentication auth, @PathVariable Long lotId, @RequestParam BigInteger bidSum) {
+        UserDetails details = (UserDetails) auth.getPrincipal();
+        User user = userService.getUserWithProductsByEmail(details.getUsername());
+        Lot lot = lotService.get(lotId);
+
+        bidService.makeABet(user, lot, bidSum);
+        return mapper.mapToDto(lot);
     }
 }

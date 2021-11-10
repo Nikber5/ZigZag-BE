@@ -1,7 +1,9 @@
-package com.zigzag.auction.service;
+package com.zigzag.auction.service.impl;
 
+import com.zigzag.auction.exception.DataProcessingException;
 import com.zigzag.auction.model.Lot;
 import com.zigzag.auction.repository.LotRepository;
+import com.zigzag.auction.service.LotService;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
@@ -19,7 +21,18 @@ public class LotServiceImpl implements LotService {
     }
 
     @Override
+    public Lot get(Long id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new DataProcessingException("Can't get lot by id: " + id));
+    }
+
+    @Override
     public Lot create(Lot lot) {
+        return repository.save(lot);
+    }
+
+    @Override
+    public Lot update(Lot lot) {
         return repository.save(lot);
     }
 }

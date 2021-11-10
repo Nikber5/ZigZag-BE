@@ -3,9 +3,11 @@ package com.zigzag.auction.model;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 public class Lot extends AbstractEntity {
@@ -20,7 +22,8 @@ public class Lot extends AbstractEntity {
     private Boolean isActive;
     @ManyToOne
     private User winner;
-    //List<Bid> bids
+    @OneToMany(mappedBy = "lot")
+    private List<Bid> bids;
 
     public Lot() {
     }
@@ -89,5 +92,21 @@ public class Lot extends AbstractEntity {
 
     public void setWinner(User winner) {
         this.winner = winner;
+    }
+
+    public Boolean getActive() {
+        return isActive;
+    }
+
+    public void setActive(Boolean active) {
+        isActive = active;
+    }
+
+    public List<Bid> getBids() {
+        return bids;
+    }
+
+    public void setBids(List<Bid> bids) {
+        this.bids = bids;
     }
 }

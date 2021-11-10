@@ -27,4 +27,17 @@ public class UserMapper implements RequestDtoMapper<UserRequestDto, User>,
         dto.setSecondName(user.getSecondName());
         return dto;
     }
+
+    public String getName(User user) {
+        String name = "";
+        String firstName = user.getFirstName();
+        if (firstName != null && !firstName.equals("")) {
+            name += firstName + " ";
+        }
+        String secondName = user.getSecondName();
+        if (secondName != null && !secondName.equals("")) {
+            name += secondName;
+        }
+        return name.equals("") ? null : name.trim();
+    }
 }
