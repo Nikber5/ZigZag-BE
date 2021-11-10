@@ -5,8 +5,8 @@ import com.zigzag.auction.model.User;
 import com.zigzag.auction.service.AuthenticationService;
 import com.zigzag.auction.service.RoleService;
 import com.zigzag.auction.service.UserService;
-import org.springframework.stereotype.Service;
 import java.util.Set;
+import org.springframework.stereotype.Service;
 
 @Service
 public class AuthenticationServiceImpl implements AuthenticationService {

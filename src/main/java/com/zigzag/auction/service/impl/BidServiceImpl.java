@@ -5,9 +5,9 @@ import com.zigzag.auction.model.Lot;
 import com.zigzag.auction.model.User;
 import com.zigzag.auction.repository.BidRepository;
 import com.zigzag.auction.service.BidService;
-import org.springframework.stereotype.Service;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
+import org.springframework.stereotype.Service;
 
 @Service
 public class BidServiceImpl implements BidService {

@@ -8,6 +8,8 @@ import com.zigzag.auction.service.ProductService;
 import com.zigzag.auction.service.UserService;
 import com.zigzag.auction.service.mapper.ProductMapper;
 import com.zigzag.auction.util.RoleUtil;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,8 +18,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/products")
@@ -26,7 +26,8 @@ public class ProductController {
     private final UserService userService;
     private final ProductMapper mapper;
 
-    public ProductController(ProductService productService, UserService userService, ProductMapper mapper) {
+    public ProductController(ProductService productService, UserService userService,
+                             ProductMapper mapper) {
         this.productService = productService;
         this.userService = userService;
         this.mapper = mapper;
@@ -44,7 +45,8 @@ public class ProductController {
 
     @PostMapping("/new")
     @Secured(RoleUtil.ROLE_USER)
-    public ProductResponseDto createProduct(Authentication auth, @RequestBody ProductRequestDto dto) {
+    public ProductResponseDto createProduct(Authentication auth,
+                                            @RequestBody ProductRequestDto dto) {
         Product product = mapper.mapToModel(dto);
         UserDetails details = (UserDetails) auth.getPrincipal();
         User user = userService.getUserWithProductsByEmail(details.getUsername());

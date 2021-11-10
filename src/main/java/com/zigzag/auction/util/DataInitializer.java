@@ -4,9 +4,9 @@ import com.zigzag.auction.model.Role;
 import com.zigzag.auction.model.User;
 import com.zigzag.auction.service.RoleService;
 import com.zigzag.auction.service.UserService;
-import org.springframework.stereotype.Component;
-import javax.annotation.PostConstruct;
 import java.util.Set;
+import javax.annotation.PostConstruct;
+import org.springframework.stereotype.Component;
 
 @Component
 public class DataInitializer {

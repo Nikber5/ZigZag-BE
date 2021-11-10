@@ -1,13 +1,13 @@
 package com.zigzag.auction.model;
 
+import java.math.BigInteger;
+import java.time.LocalDateTime;
+import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import java.math.BigInteger;
-import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 public class Lot extends AbstractEntity {
@@ -16,7 +16,7 @@ public class Lot extends AbstractEntity {
     private User creator;
     @OneToOne
     private Product product;
-    private LocalDateTime startDate ;
+    private LocalDateTime startDate;
     private LocalDateTime endDate;
     private BigInteger startPrice;
     private Boolean isActive;
@@ -76,14 +76,6 @@ public class Lot extends AbstractEntity {
 
     public void setStartPrice(BigInteger startPrice) {
         this.startPrice = startPrice;
-    }
-
-    public boolean isActive() {
-        return isActive;
-    }
-
-    public void setActive(boolean active) {
-        isActive = active;
     }
 
     public User getWinner() {

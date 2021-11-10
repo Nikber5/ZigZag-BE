@@ -1,7 +1,7 @@
 package com.zigzag.auction.model;
 
-import javax.persistence.Entity;
 import java.util.Objects;
+import javax.persistence.Entity;
 
 @Entity
 public class Product extends AbstractEntity {
@@ -34,8 +34,12 @@ public class Product extends AbstractEntity {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Product product = (Product) o;
         return Objects.equals(getId(), product.getId())
                 && Objects.equals(name, product.name)
@@ -49,10 +53,10 @@ public class Product extends AbstractEntity {
 
     @Override
     public String toString() {
-        return "Product{" +
-                "id='" + super.getId() + '\'' +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                '}';
+        return "Product{"
+                + "id='" + super.getId() + '\''
+                + ", name='" + name + '\''
+                + ", description='" + description + '\''
+                + '}';
     }
 }

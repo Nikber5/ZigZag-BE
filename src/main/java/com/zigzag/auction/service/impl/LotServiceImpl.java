@@ -4,8 +4,8 @@ import com.zigzag.auction.exception.DataProcessingException;
 import com.zigzag.auction.model.Lot;
 import com.zigzag.auction.repository.LotRepository;
 import com.zigzag.auction.service.LotService;
-import org.springframework.stereotype.Service;
 import java.util.List;
+import org.springframework.stereotype.Service;
 
 @Service
 public class LotServiceImpl implements LotService {

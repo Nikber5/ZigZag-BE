@@ -4,8 +4,8 @@ import com.zigzag.auction.exception.DataProcessingException;
 import com.zigzag.auction.model.Product;
 import com.zigzag.auction.repository.ProductRepository;
 import com.zigzag.auction.service.ProductService;
-import org.springframework.stereotype.Service;
 import java.util.List;
+import org.springframework.stereotype.Service;
 
 @Service
 public class ProductServiceImpl implements ProductService {

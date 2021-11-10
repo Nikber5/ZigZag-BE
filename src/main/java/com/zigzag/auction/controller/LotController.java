@@ -10,6 +10,11 @@ import com.zigzag.auction.service.UserService;
 import com.zigzag.auction.service.mapper.LotMapper;
 import com.zigzag.auction.util.RoleUtil;
 import com.zigzag.auction.util.TimeUtil;
+import java.math.BigInteger;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,11 +24,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import java.math.BigInteger;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/lots")
@@ -55,7 +55,8 @@ public class LotController {
 
     @PostMapping("/create")
     @Secured(RoleUtil.ROLE_USER)
-    public LotResponseDto createLot(Authentication auth, @RequestParam Long productId, @RequestParam BigInteger startPrice) {
+    public LotResponseDto createLot(Authentication auth, @RequestParam Long productId,
+                                    @RequestParam BigInteger startPrice) {
         UserDetails details = (UserDetails) auth.getPrincipal();
         User user = userService.getUserWithProductsByEmail(details.getUsername());
         Optional<Product> productOptional = user.getProducts().stream()
@@ -74,7 +75,8 @@ public class LotController {
 
     @PostMapping("/{lotId}/makeABet")
     @Secured(RoleUtil.ROLE_USER)
-    public LotResponseDto makeABet(Authentication auth, @PathVariable Long lotId, @RequestParam BigInteger bidSum) {
+    public LotResponseDto makeABet(Authentication auth, @PathVariable Long lotId,
+                                   @RequestParam BigInteger bidSum) {
         UserDetails details = (UserDetails) auth.getPrincipal();
         User user = userService.getUserWithProductsByEmail(details.getUsername());
         Lot lot = lotService.get(lotId);

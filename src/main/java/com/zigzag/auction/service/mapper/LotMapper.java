@@ -5,9 +5,9 @@ import com.zigzag.auction.model.Bid;
 import com.zigzag.auction.model.Lot;
 import com.zigzag.auction.model.Product;
 import com.zigzag.auction.model.User;
-import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.stereotype.Component;
 
 @Component
 public class LotMapper implements ResponseDtoMapper<LotResponseDto, Lot> {
@@ -36,7 +36,7 @@ public class LotMapper implements ResponseDtoMapper<LotResponseDto, Lot> {
         dto.setStartDate(lot.getStartDate());
         dto.setEndDate(lot.getEndDate());
         dto.setStartPrice(lot.getStartPrice());
-        dto.setActive(lot.isActive());
+        dto.setActive(lot.getActive());
 
         User winner = lot.getWinner();
         if (winner != null) {

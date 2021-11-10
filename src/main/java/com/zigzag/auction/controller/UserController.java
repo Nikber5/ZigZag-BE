@@ -8,6 +8,8 @@ import com.zigzag.auction.service.mapper.LotMapper;
 import com.zigzag.auction.service.mapper.ProductMapper;
 import com.zigzag.auction.service.mapper.UserMapper;
 import com.zigzag.auction.util.RoleUtil;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,8 +22,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/users")

@@ -1,14 +1,13 @@
 package com.zigzag.auction.model;
 
-import org.hibernate.annotations.Cascade;
+import java.util.List;
+import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import java.util.List;
-import java.util.Set;
 
 @Entity
 @Table(name = "user_table")
@@ -104,14 +103,15 @@ public class User extends AbstractEntity {
 
     @Override
     public String toString() {
-        return "User{" +
-                "id='" + super.getId() + '\'' +
-                ", firstName='" + firstName + '\'' +
-                ", secondName='" + secondName + '\'' +
-                ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                ", products=" + products + '\'' +
-                ", bids=" + bids +
-                '}';
+        return "User{"
+                + "id='" + super.getId() + '\''
+                + ", firstName='" + firstName + '\''
+                + ", secondName='" + secondName + '\''
+                + ", email='" + email + '\''
+                + ", password='" + password + '\''
+                + ", products=" + products + '\''
+                + ", bids="
+                + bids
+                + '}';
     }
 }

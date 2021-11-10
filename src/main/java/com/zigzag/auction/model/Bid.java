@@ -1,10 +1,10 @@
 package com.zigzag.auction.model;
 
+import java.math.BigInteger;
+import java.time.LocalDateTime;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import java.math.BigInteger;
-import java.time.LocalDateTime;
 
 @Entity
 public class Bid extends AbstractEntity {
@@ -59,10 +59,10 @@ public class Bid extends AbstractEntity {
 
     @Override
     public String toString() {
-        return "Bid{" +
-                "id='" + super.getId() + '\'' +
-                ", betTime=" + betTime +
-                ", bidSum=" + bidSum +
-                '}';
+        return "Bid{"
+                + "id='" + super.getId() + '\''
+                + ", betTime=" + betTime
+                + ", bidSum=" + bidSum
+                + '}';
     }
 }

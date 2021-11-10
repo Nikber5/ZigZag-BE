@@ -15,7 +15,8 @@ public class BasicSecurityConfiguration extends WebSecurityConfigurerAdapter {
     private final PasswordEncoder passwordEncoder;
     private final UserDetailsService userDetailsService;
 
-    public BasicSecurityConfiguration(PasswordEncoder passwordEncoder, UserDetailsService userDetailsService) {
+    public BasicSecurityConfiguration(PasswordEncoder passwordEncoder,
+                                      UserDetailsService userDetailsService) {
         this.passwordEncoder = passwordEncoder;
         this.userDetailsService = userDetailsService;
     }
