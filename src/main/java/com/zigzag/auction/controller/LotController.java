@@ -12,13 +12,16 @@ import com.zigzag.auction.util.TimeUtil;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/lots")
@@ -31,6 +34,13 @@ public class LotController {
         this.userService = userService;
         this.lotService = lotService;
         this.mapper = mapper;
+    }
+
+    @GetMapping
+    public List<LotResponseDto> getAll() {
+        return lotService.getAll().stream()
+                .map(mapper::mapToDto)
+                .collect(Collectors.toList());
     }
 
     @PostMapping("/create")

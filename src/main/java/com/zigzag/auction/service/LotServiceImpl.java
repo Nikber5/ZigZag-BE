@@ -3,6 +3,7 @@ package com.zigzag.auction.service;
 import com.zigzag.auction.model.Lot;
 import com.zigzag.auction.repository.LotRepository;
 import org.springframework.stereotype.Service;
+import java.util.List;
 
 @Service
 public class LotServiceImpl implements LotService {
@@ -10,6 +11,11 @@ public class LotServiceImpl implements LotService {
 
     public LotServiceImpl(LotRepository repository) {
         this.repository = repository;
+    }
+
+    @Override
+    public List<Lot> getAll() {
+        return repository.findAll();
     }
 
     @Override
