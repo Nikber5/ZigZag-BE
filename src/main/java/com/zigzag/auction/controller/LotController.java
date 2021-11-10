@@ -1,16 +1,17 @@
 package com.zigzag.auction.controller;
 
+import com.zigzag.auction.dto.response.LotResponseDto;
 import com.zigzag.auction.model.Lot;
 import com.zigzag.auction.model.Product;
 import com.zigzag.auction.model.User;
 import com.zigzag.auction.service.LotService;
 import com.zigzag.auction.service.UserService;
+import com.zigzag.auction.service.mapper.LotMapper;
 import com.zigzag.auction.util.RoleUtil;
 import com.zigzag.auction.util.TimeUtil;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -24,15 +25,17 @@ import java.util.Optional;
 public class LotController {
     private final UserService userService;
     private final LotService lotService;
+    private final LotMapper mapper;
 
-    public LotController(UserService userService, LotService lotService) {
+    public LotController(UserService userService, LotService lotService, LotMapper mapper) {
         this.userService = userService;
         this.lotService = lotService;
+        this.mapper = mapper;
     }
 
     @PostMapping("/create")
     @Secured(RoleUtil.ROLE_USER)
-    public Lot createLot(Authentication auth, @RequestParam Long productId, @RequestParam BigInteger startPrice) {
+    public LotResponseDto createLot(Authentication auth, @RequestParam Long productId, @RequestParam BigInteger startPrice) {
         UserDetails details = (UserDetails) auth.getPrincipal();
         User user = userService.getUserWithProductsByEmail(details.getUsername());
         Optional<Product> productOptional = user.getProducts().stream()
@@ -46,6 +49,6 @@ public class LotController {
         userService.update(user);
         Lot lot = new Lot(user, product, LocalDateTime.now(),
                 LocalDateTime.now().plusDays(TimeUtil.DEFAULT_LOT_DURATION_DAYS), startPrice, true);
-        return lotService.create(lot);
+        return mapper.mapToDto(lotService.create(lot));
     }
 }
