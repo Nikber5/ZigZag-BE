@@ -4,6 +4,8 @@ import com.zigzag.auction.dto.request.UserRequestDto;
 import com.zigzag.auction.dto.response.UserResponseDto;
 import com.zigzag.auction.model.User;
 import com.zigzag.auction.service.UserService;
+import com.zigzag.auction.service.mapper.LotMapper;
+import com.zigzag.auction.service.mapper.ProductMapper;
 import com.zigzag.auction.service.mapper.UserMapper;
 import com.zigzag.auction.util.RoleUtil;
 import org.springframework.security.access.annotation.Secured;
@@ -19,27 +21,35 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/users")
 public class UserController {
     private final UserService userService;
-    private final UserMapper mapper;
+    private final UserMapper userMapper;
+    private final ProductMapper productMapper;
+    private final LotMapper lotMapper;
 
-    public UserController(UserService userService, UserMapper mapper) {
+    public UserController(UserService userService, UserMapper mapper,
+                          ProductMapper productMapper, LotMapper lotMapper) {
         this.userService = userService;
-        this.mapper = mapper;
+        this.userMapper = mapper;
+        this.productMapper = productMapper;
+        this.lotMapper = lotMapper;
     }
 
     @GetMapping
     @Secured(RoleUtil.ROLE_ADMIN)
-    public List<User> getAll() {
-        return userService.getAll();
+    public List<UserResponseDto> getAll() {
+        return userService.getAll().stream()
+                .map(this::mapToDto)
+                .collect(Collectors.toList());
     }
 
     @GetMapping("/{id}")
-    public User get(@PathVariable Long id) {
-        return userService.get(id);
+    public UserResponseDto get(@PathVariable Long id) {
+        return mapToDto(userService.get(id));
     }
 
     @PutMapping("/update")
@@ -48,17 +58,8 @@ public class UserController {
         UserDetails details = (UserDetails) auth.getPrincipal();
         User user = userService.findByEmail(details.getUsername());
         updateUserDescriptionFromDto(user, dto);
-        return mapper.mapToDto(userService.update(user));
+        return mapToDto(userService.update(user));
 
-    }
-
-    private void updateUserDescriptionFromDto(User user, UserRequestDto dto) {
-        if (StringUtils.hasLength(dto.getFirstName())) {
-            user.setFirstName(dto.getFirstName());
-        }
-        if (StringUtils.hasLength(dto.getSecondName())) {
-            user.setSecondName(dto.getSecondName());
-        }
     }
 
     @DeleteMapping
@@ -70,8 +71,28 @@ public class UserController {
 
     @GetMapping("/by-email")
     @Secured(RoleUtil.ROLE_ADMIN)
-    public User getByEmail(@RequestParam String email) {
+    public UserResponseDto getByEmail(@RequestParam String email) {
         System.out.println("Getting user by email " + email);
-        return userService.findByEmail(email);
+        return mapToDto(userService.findByEmail(email));
+    }
+
+    private void updateUserDescriptionFromDto(User user, UserRequestDto dto) {
+        if (StringUtils.hasLength(dto.getFirstName())) {
+            user.setFirstName(dto.getFirstName());
+        }
+        if (StringUtils.hasLength(dto.getSecondName())) {
+            user.setSecondName(dto.getSecondName());
+        }
+    }
+
+    private UserResponseDto mapToDto(User user) {
+        UserResponseDto dto = userMapper.mapToDto(user);
+        dto.setLots(user.getLots().stream()
+                .map(lotMapper::mapToDto)
+                .collect(Collectors.toList()));
+        dto.setProducts(user.getProducts().stream()
+                .map(productMapper::mapToDto)
+                .collect(Collectors.toList()));
+        return dto;
     }
 }

@@ -1,6 +1,7 @@
 package com.zigzag.auction.model;
 
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import java.math.BigInteger;
@@ -9,6 +10,7 @@ import java.time.LocalDateTime;
 @Entity
 public class Lot extends AbstractEntity {
     @ManyToOne
+    @JoinColumn(nullable = false)
     private User creator;
     @OneToOne
     private Product product;
