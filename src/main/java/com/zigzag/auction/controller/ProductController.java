@@ -43,7 +43,7 @@ public class ProductController {
                 .collect(Collectors.toList());
     }
 
-    @PostMapping("/new")
+    @PostMapping
     @Secured(RoleUtil.ROLE_USER)
     public ProductResponseDto createProduct(Authentication auth,
                                             @RequestBody ProductRequestDto dto) {

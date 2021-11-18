@@ -11,8 +11,6 @@ public class UserMapper implements RequestDtoMapper<UserRequestDto, User>,
     @Override
     public User mapToModel(UserRequestDto dto) {
         User user = new User();
-        user.setEmail(dto.getEmail());
-        user.setPassword(dto.getPassword());
         user.setFirstName(dto.getFirstName());
         user.setSecondName(dto.getSecondName());
         return user;
