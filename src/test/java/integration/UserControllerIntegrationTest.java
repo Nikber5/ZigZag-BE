@@ -86,8 +86,9 @@ public class UserControllerIntegrationTest {
 
     @Test
     public void update_ok() throws Exception {
-        User bob = userRepository.findById(1L)
-                .orElseThrow(() -> new DataProcessingException("Can't get user by id: " + 1L));
+        long bobId = 1L;
+        User bob = userRepository.findById(bobId)
+                .orElseThrow(() -> new DataProcessingException("Can't get user by id: " + bobId));
         assertNull(bob.getSecondName());
         bob.setSecondName("Johnson");
         UserResponseDto dto = mapper.mapToDto(bob);
@@ -96,7 +97,8 @@ public class UserControllerIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON).content(JsonUtil.toJson(dto))).andDo(print())
                 .andExpect(status().isOk());
 
-        User updated = userRepository.findById(1L).get();
+        User updated = userRepository.findById(bobId)
+                .orElseThrow(() -> new DataProcessingException("Can't get user by id: " + bobId));
         assertEquals(bob.getSecondName(), updated.getSecondName());
     }
 
@@ -106,15 +108,14 @@ public class UserControllerIntegrationTest {
         john.setFirstName("John");
         john.setFirstName("Johnson");
         User save = userRepository.save(john);
-        List<User> all = userRepository.findAll();
-        assertEquals(3, all.size());
+        List<User> oldUsers = userRepository.findAll();
 
         mvc.perform(delete("/users/" + save.getId()).header("Authorization", ADMIN_AUTHORIZATION)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk());
 
-        all = userRepository.findAll();
-        assertEquals(2, all.size());
+        List<User> newUsers = userRepository.findAll();
+        assertEquals(oldUsers.size(), newUsers.size() + 1);
     }
 }

@@ -7,7 +7,7 @@ import java.io.IOException;
 class JsonUtil {
     static byte[] toJson(Object object) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
-        //mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         return mapper.writeValueAsBytes(object);
     }
 }
