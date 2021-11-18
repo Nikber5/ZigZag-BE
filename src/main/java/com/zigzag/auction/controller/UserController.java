@@ -52,7 +52,7 @@ public class UserController {
         return mapToDto(userService.get(id));
     }
 
-    @PutMapping("/update")
+    @PutMapping
     @Secured(RoleUtil.ROLE_USER)
     public UserResponseDto update(@RequestBody UserRequestDto dto, Authentication auth) {
         UserDetails details = (UserDetails) auth.getPrincipal();

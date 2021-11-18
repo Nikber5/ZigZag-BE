@@ -4,7 +4,6 @@ import com.zigzag.auction.dto.response.LotResponseDto;
 import com.zigzag.auction.model.Lot;
 import com.zigzag.auction.model.Product;
 import com.zigzag.auction.model.User;
-import com.zigzag.auction.service.BidService;
 import com.zigzag.auction.service.LotService;
 import com.zigzag.auction.service.UserService;
 import com.zigzag.auction.service.mapper.LotMapper;
@@ -31,14 +30,11 @@ public class LotController {
     private final UserService userService;
     private final LotService lotService;
     private final LotMapper mapper;
-    private final BidService bidService;
 
-    public LotController(UserService userService, LotService lotService,
-                         LotMapper mapper, BidService bidService) {
+    public LotController(UserService userService, LotService lotService, LotMapper mapper) {
         this.userService = userService;
         this.lotService = lotService;
         this.mapper = mapper;
-        this.bidService = bidService;
     }
 
     @GetMapping
@@ -53,7 +49,7 @@ public class LotController {
         return mapper.mapToDto(lotService.get(id));
     }
 
-    @PostMapping("/create")
+    @PostMapping
     @Secured(RoleUtil.ROLE_USER)
     public LotResponseDto createLot(Authentication auth, @RequestParam Long productId,
                                     @RequestParam BigInteger startPrice) {
@@ -71,17 +67,5 @@ public class LotController {
         Lot lot = new Lot(user, product, LocalDateTime.now(),
                 LocalDateTime.now().plusDays(TimeUtil.DEFAULT_LOT_DURATION_DAYS), startPrice, true);
         return mapper.mapToDto(lotService.create(lot));
-    }
-
-    @PostMapping("/{lotId}/makeABet")
-    @Secured(RoleUtil.ROLE_USER)
-    public LotResponseDto makeABet(Authentication auth, @PathVariable Long lotId,
-                                   @RequestParam BigInteger bidSum) {
-        UserDetails details = (UserDetails) auth.getPrincipal();
-        User user = userService.getUserWithProductsByEmail(details.getUsername());
-        Lot lot = lotService.get(lotId);
-
-        bidService.makeABet(user, lot, bidSum);
-        return mapper.mapToDto(lot);
     }
 }
