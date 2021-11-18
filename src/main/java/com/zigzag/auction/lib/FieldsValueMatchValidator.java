@@ -14,6 +14,7 @@ public class FieldsValueMatchValidator
         this.fieldMatch = constraintAnnotation.fieldMatch();
     }
 
+    @Override
     public boolean isValid(Object value,
                            ConstraintValidatorContext context) {
         Object fieldValue = new BeanWrapperImpl(value)
