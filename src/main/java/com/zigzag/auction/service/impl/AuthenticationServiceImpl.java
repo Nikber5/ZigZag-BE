@@ -21,7 +21,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Override
     public User register(User user) {
         user.setRoles(Set.of(roleService.getRoleByName(Role.RoleName.ROLE_USER)));
-        userService.create(user);
+        user = userService.create(user);
         return user;
     }
 }
