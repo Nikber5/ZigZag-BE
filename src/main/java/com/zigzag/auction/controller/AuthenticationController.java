@@ -4,6 +4,7 @@ import com.zigzag.auction.dto.request.UserLoginDto;
 import com.zigzag.auction.dto.request.UserRegisterRequestDto;
 import com.zigzag.auction.dto.response.UserResponseDto;
 import com.zigzag.auction.exception.AuthenticationException;
+import com.zigzag.auction.exception.InvalidCredentialsException;
 import com.zigzag.auction.jwt.JwtTokenProvider;
 import com.zigzag.auction.model.User;
 import com.zigzag.auction.service.AuthenticationService;
@@ -36,6 +37,9 @@ public class AuthenticationController {
 
     @PostMapping("/register")
     public UserResponseDto register(@Valid @RequestBody UserRegisterRequestDto requestDto) {
+        if (!authenticationService.isUnique(requestDto.getEmail())) {
+            throw new InvalidCredentialsException("Email must be unique");
+        }
         User user = registerMapper.mapToModel(requestDto);
         authenticationService.register(user);
         return mapper.mapToDto(user);

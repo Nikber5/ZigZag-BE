@@ -7,4 +7,6 @@ public interface AuthenticationService {
     User register(User user);
 
     User login(String login, String password) throws AuthenticationException;
+
+    boolean isUnique(String login);
 }

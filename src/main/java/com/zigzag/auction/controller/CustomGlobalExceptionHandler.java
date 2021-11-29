@@ -1,5 +1,6 @@
 package com.zigzag.auction.controller;
 
+import com.zigzag.auction.exception.InvalidCredentialsException;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -11,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
@@ -32,5 +34,15 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
                 .collect(Collectors.toList());
         body.put("errors", errors);
         return new ResponseEntity<>(body, headers, status);
+    }
+
+    @ExceptionHandler(InvalidCredentialsException.class)
+    protected ResponseEntity<Object> handleInvalidCredentialsException(
+            InvalidCredentialsException ex, WebRequest request) {
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("timestamp", new Date());
+        List<String> errors = List.of(ex.getMessage());
+        body.put("errors", errors);
+        return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
     }
 }

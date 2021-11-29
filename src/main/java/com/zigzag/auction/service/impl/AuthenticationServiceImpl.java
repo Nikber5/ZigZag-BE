@@ -1,6 +1,7 @@
 package com.zigzag.auction.service.impl;
 
 import com.zigzag.auction.exception.AuthenticationException;
+import com.zigzag.auction.exception.DataProcessingException;
 import com.zigzag.auction.model.Role;
 import com.zigzag.auction.model.User;
 import com.zigzag.auction.service.AuthenticationService;
@@ -38,5 +39,15 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             throw new AuthenticationException("Incorrect username or password!!!");
         }
         return user;
+    }
+
+    @Override
+    public boolean isUnique(String login) {
+        try {
+            User user = userService.findByEmail(login);
+            return user == null;
+        } catch (DataProcessingException e) {
+            return true;
+        }
     }
 }
