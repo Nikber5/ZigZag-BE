@@ -7,10 +7,8 @@ import com.zigzag.auction.service.UserService;
 import com.zigzag.auction.service.mapper.LotMapper;
 import com.zigzag.auction.service.mapper.ProductMapper;
 import com.zigzag.auction.service.mapper.UserMapper;
-import com.zigzag.auction.util.RoleUtil;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.util.StringUtils;
@@ -40,7 +38,6 @@ public class UserController {
     }
 
     @GetMapping
-    @Secured(RoleUtil.ROLE_ADMIN)
     public List<UserResponseDto> getAll() {
         return userService.getAll().stream()
                 .map(this::mapToDto)
@@ -53,7 +50,6 @@ public class UserController {
     }
 
     @PutMapping
-    @Secured(RoleUtil.ROLE_USER)
     public UserResponseDto update(@RequestBody UserRequestDto dto, Authentication auth) {
         UserDetails details = (UserDetails) auth.getPrincipal();
         User user = userService.findByEmail(details.getUsername());
@@ -63,16 +59,13 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    @Secured(RoleUtil.ROLE_ADMIN)
     public String delete(@PathVariable Long id) {
         userService.delete(id);
         return "Done";
     }
 
     @GetMapping("/by-email")
-    @Secured(RoleUtil.ROLE_ADMIN)
     public UserResponseDto getByEmail(@RequestParam String email) {
-        System.out.println("Getting user by email " + email);
         return mapToDto(userService.findByEmail(email));
     }
 

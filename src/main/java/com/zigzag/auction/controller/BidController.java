@@ -7,9 +7,7 @@ import com.zigzag.auction.service.BidService;
 import com.zigzag.auction.service.LotService;
 import com.zigzag.auction.service.UserService;
 import com.zigzag.auction.service.mapper.LotMapper;
-import com.zigzag.auction.util.RoleUtil;
 import java.math.BigInteger;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,7 +33,6 @@ public class BidController {
     }
 
     @PostMapping("/{lotId}")
-    @Secured(RoleUtil.ROLE_USER)
     public LotResponseDto makeABet(Authentication auth, @PathVariable Long lotId,
                                    @RequestParam BigInteger bidSum) {
         UserDetails details = (UserDetails) auth.getPrincipal();
