@@ -13,6 +13,7 @@ import com.zigzag.auction.service.RoleService;
 import com.zigzag.auction.service.UserService;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import util.UserArgumentsUtil;
 
 class AuthenticationServiceImplTest {
@@ -28,10 +29,11 @@ class AuthenticationServiceImplTest {
 
         UserService userService = mock(UserService.class);
         RoleService roleService = mock(RoleService.class);
+        PasswordEncoder passwordEncoder = mock(PasswordEncoder.class);
         when(roleService.getRoleByName(Role.RoleName.ROLE_USER))
                 .thenReturn(new Role(Role.RoleName.ROLE_USER));
         when(userService.create(any(User.class))).thenReturn(expected);
-        authenticationService = new AuthenticationServiceImpl(userService, roleService);
+        authenticationService = new AuthenticationServiceImpl(userService, roleService, passwordEncoder);
     }
 
     @Test
