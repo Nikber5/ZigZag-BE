@@ -7,14 +7,12 @@ import com.zigzag.auction.model.User;
 import com.zigzag.auction.service.LotService;
 import com.zigzag.auction.service.UserService;
 import com.zigzag.auction.service.mapper.LotMapper;
-import com.zigzag.auction.util.RoleUtil;
 import com.zigzag.auction.util.TimeUtil;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -50,7 +48,6 @@ public class LotController {
     }
 
     @PostMapping
-    @Secured(RoleUtil.ROLE_USER)
     public LotResponseDto createLot(Authentication auth, @RequestParam Long productId,
                                     @RequestParam BigInteger startPrice) {
         UserDetails details = (UserDetails) auth.getPrincipal();
