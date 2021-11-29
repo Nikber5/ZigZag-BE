@@ -2,8 +2,6 @@ package com.zigzag.auction.service.impl;
 
 import com.zigzag.auction.exception.DataProcessingException;
 import com.zigzag.auction.model.User;
-import com.zigzag.auction.repository.BidRepository;
-import com.zigzag.auction.repository.ProductRepository;
 import com.zigzag.auction.repository.UserRepository;
 import com.zigzag.auction.service.UserService;
 import java.util.List;
@@ -15,9 +13,7 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder encoder;
     private final UserRepository userRepository;
 
-    public UserServiceImpl(PasswordEncoder encoder, UserRepository userRepository,
-                           ProductRepository productRepository,
-                           BidRepository bidRepository) {
+    public UserServiceImpl(PasswordEncoder encoder, UserRepository userRepository) {
         this.encoder = encoder;
         this.userRepository = userRepository;
     }

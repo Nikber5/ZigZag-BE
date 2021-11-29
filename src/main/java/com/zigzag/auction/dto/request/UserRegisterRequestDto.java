@@ -21,6 +21,18 @@ public class UserRegisterRequestDto {
     private String firstName;
     private String secondName;
 
+    public UserRegisterRequestDto() {
+    }
+
+    public UserRegisterRequestDto(String email, String password, String repeatPassword,
+                                  String firstName, String secondName) {
+        this.email = email;
+        this.password = password;
+        this.repeatPassword = repeatPassword;
+        this.firstName = firstName;
+        this.secondName = secondName;
+    }
+
     public String getEmail() {
         return email;
     }
