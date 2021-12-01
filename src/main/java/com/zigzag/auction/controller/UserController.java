@@ -7,8 +7,9 @@ import com.zigzag.auction.service.UserService;
 import com.zigzag.auction.service.mapper.LotMapper;
 import com.zigzag.auction.service.mapper.ProductMapper;
 import com.zigzag.auction.service.mapper.UserMapper;
-import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.util.StringUtils;
@@ -38,10 +39,8 @@ public class UserController {
     }
 
     @GetMapping
-    public List<UserResponseDto> getAll() {
-        return userService.getAll().stream()
-                .map(this::mapToDto)
-                .collect(Collectors.toList());
+    public Page<UserResponseDto> getAll(Pageable pageable) {
+        return userService.getAllWithPagination(pageable).map(this::mapToDto);
     }
 
     @GetMapping("/{id}")
