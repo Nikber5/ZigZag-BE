@@ -1,6 +1,7 @@
 package com.zigzag.auction.controller;
 
 import com.zigzag.auction.dto.response.BidResponseDto;
+import com.zigzag.auction.exception.InvalidBidException;
 import com.zigzag.auction.exception.RequestValidationException;
 import com.zigzag.auction.model.Bid;
 import com.zigzag.auction.model.Lot;
@@ -36,7 +37,7 @@ public class BidController {
 
     @PostMapping("/{lotId}")
     public BidResponseDto makeABet(Authentication auth, @PathVariable Long lotId,
-                                   @RequestParam BigInteger bidSum) {
+                                   @RequestParam BigInteger bidSum) throws InvalidBidException {
         UserDetails details = (UserDetails) auth.getPrincipal();
         User user = userService.findByEmail(details.getUsername());
         Lot lot = lotService.get(lotId);
