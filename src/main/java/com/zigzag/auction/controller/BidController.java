@@ -1,12 +1,14 @@
 package com.zigzag.auction.controller;
 
-import com.zigzag.auction.dto.response.LotResponseDto;
+import com.zigzag.auction.dto.response.BidResponseDto;
+import com.zigzag.auction.exception.RequestValidationException;
+import com.zigzag.auction.model.Bid;
 import com.zigzag.auction.model.Lot;
 import com.zigzag.auction.model.User;
 import com.zigzag.auction.service.BidService;
 import com.zigzag.auction.service.LotService;
 import com.zigzag.auction.service.UserService;
-import com.zigzag.auction.service.mapper.LotMapper;
+import com.zigzag.auction.service.mapper.BidMapper;
 import java.math.BigInteger;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,10 +24,10 @@ public class BidController {
     private final UserService userService;
     private final BidService bidService;
     private final LotService lotService;
-    private final LotMapper mapper;
+    private final BidMapper mapper;
 
     public BidController(UserService userService, BidService bidService,
-                         LotService lotService, LotMapper mapper) {
+                         LotService lotService, BidMapper mapper) {
         this.userService = userService;
         this.bidService = bidService;
         this.lotService = lotService;
@@ -33,13 +35,16 @@ public class BidController {
     }
 
     @PostMapping("/{lotId}")
-    public LotResponseDto makeABet(Authentication auth, @PathVariable Long lotId,
+    public BidResponseDto makeABet(Authentication auth, @PathVariable Long lotId,
                                    @RequestParam BigInteger bidSum) {
         UserDetails details = (UserDetails) auth.getPrincipal();
-        User user = userService.getUserWithProductsByEmail(details.getUsername());
+        User user = userService.findByEmail(details.getUsername());
         Lot lot = lotService.get(lotId);
+        if (user.getEmail().equals(lot.getCreator().getEmail())) {
+            throw new RequestValidationException("User can't make a bet on an own lot");
+        }
 
-        bidService.makeABet(user, lot, bidSum);
-        return mapper.mapToDto(lot);
+        Bid bid = bidService.makeABet(user, lot, bidSum);
+        return mapper.mapToDto(bid);
     }
 }

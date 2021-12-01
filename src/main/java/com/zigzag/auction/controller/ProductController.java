@@ -7,8 +7,8 @@ import com.zigzag.auction.model.User;
 import com.zigzag.auction.service.ProductService;
 import com.zigzag.auction.service.UserService;
 import com.zigzag.auction.service.mapper.ProductMapper;
-import java.util.List;
-import java.util.stream.Collectors;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,12 +32,11 @@ public class ProductController {
     }
 
     @GetMapping
-    public List<ProductResponseDto> getMyProducts(Authentication auth) {
+    public Page<ProductResponseDto> getMyProducts(Authentication auth, Pageable pageable) {
         UserDetails details = (UserDetails) auth.getPrincipal();
-        User user = userService.getUserWithProductsByEmail(details.getUsername());
-        return user.getProducts().stream()
-                .map(mapper::mapToDto)
-                .collect(Collectors.toList());
+        User user = userService.findByEmail(details.getUsername());
+        Page<Product> productsByUser = productService.findProductsByUser(user, pageable);
+        return productsByUser.map(mapper::mapToDto);
     }
 
     @PostMapping
@@ -45,10 +44,9 @@ public class ProductController {
                                             @RequestBody ProductRequestDto dto) {
         Product product = mapper.mapToModel(dto);
         UserDetails details = (UserDetails) auth.getPrincipal();
-        User user = userService.getUserWithProductsByEmail(details.getUsername());
+        User user = userService.findByEmail(details.getUsername());
+        product.setOwner(user);
         productService.create(product);
-        user.getProducts().add(product);
-        userService.update(user);
         return mapper.mapToDto(product);
     }
 }

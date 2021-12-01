@@ -2,9 +2,12 @@ package com.zigzag.auction.service.impl;
 
 import com.zigzag.auction.exception.DataProcessingException;
 import com.zigzag.auction.model.Product;
+import com.zigzag.auction.model.User;
 import com.zigzag.auction.repository.ProductRepository;
 import com.zigzag.auction.service.ProductService;
 import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -39,5 +42,10 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public void delete(Long id) {
         productRepository.deleteById(id);
+    }
+
+    @Override
+    public Page<Product> findProductsByUser(User user, Pageable pageable) {
+        return productRepository.findAllByOwner(user, pageable);
     }
 }

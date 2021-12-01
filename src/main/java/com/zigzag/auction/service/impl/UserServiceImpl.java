@@ -5,6 +5,8 @@ import com.zigzag.auction.model.User;
 import com.zigzag.auction.repository.UserRepository;
 import com.zigzag.auction.service.UserService;
 import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -55,5 +57,10 @@ public class UserServiceImpl implements UserService {
     public User getUserWithProductsByEmail(String email) {
         return userRepository.getUserWithProductsByEmail(email)
                 .orElseThrow(() -> new DataProcessingException("Can't get user by email with products: " + email));
+    }
+
+    @Override
+    public Page<User> getAllWithPagination(Pageable pageable) {
+        return userRepository.findAll(pageable);
     }
 }

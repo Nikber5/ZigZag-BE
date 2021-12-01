@@ -5,6 +5,8 @@ import com.zigzag.auction.model.Lot;
 import com.zigzag.auction.repository.LotRepository;
 import com.zigzag.auction.service.LotService;
 import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -34,5 +36,15 @@ public class LotServiceImpl implements LotService {
     @Override
     public Lot update(Lot lot) {
         return repository.save(lot);
+    }
+
+    @Override
+    public void delete(Long id) {
+        repository.deleteById(id);
+    }
+
+    @Override
+    public Page<Lot> getAllWithPagination(Pageable pageable) {
+        return repository.findAll(pageable);
     }
 }

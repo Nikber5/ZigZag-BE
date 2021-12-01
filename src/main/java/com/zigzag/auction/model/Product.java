@@ -2,11 +2,16 @@ package com.zigzag.auction.model;
 
 import java.util.Objects;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class Product extends AbstractEntity {
     private String name;
     private String description;
+    @ManyToOne
+    @JoinColumn
+    private User owner;
 
     public Product() {
     }
@@ -30,6 +35,14 @@ public class Product extends AbstractEntity {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public User getOwner() {
+        return owner;
+    }
+
+    public void setOwner(User owner) {
+        this.owner = owner;
     }
 
     @Override
