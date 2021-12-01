@@ -1,6 +1,6 @@
 package com.zigzag.auction.controller;
 
-import com.zigzag.auction.exception.InvalidBidException;
+import com.zigzag.auction.exception.AuctionException;
 import com.zigzag.auction.exception.InvalidCredentialsException;
 import com.zigzag.auction.exception.RequestValidationException;
 import java.util.Date;
@@ -52,9 +52,9 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
         return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(InvalidBidException.class)
-    protected ResponseEntity<Object> handleInvalidBidException(
-            InvalidBidException ex, WebRequest request) {
+    @ExceptionHandler(AuctionException.class)
+    protected ResponseEntity<Object> handleAuctionException(
+            AuctionException ex, WebRequest request) {
         Map<String, Object> body = createGenericBody(ex);
         return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
     }

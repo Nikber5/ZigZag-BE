@@ -4,7 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(code = HttpStatus.BAD_REQUEST)
-public class InvalidBidException extends Exception {
+public class InvalidBidException extends AuctionException {
     public InvalidBidException(String message) {
         super(message);
     }

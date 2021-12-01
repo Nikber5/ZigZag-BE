@@ -57,9 +57,10 @@ public class DataInitializer {
                 User owner = product.getOwner();
                 product.setOwner(null);
                 productService.update(product);
+                BigInteger price = BigInteger.valueOf(1000);
                 Lot lot = new Lot(owner, product, LocalDateTime.now(),
                         LocalDateTime.now().plusDays(TimeUtil.DEFAULT_LOT_DURATION_DAYS),
-                        BigInteger.valueOf(1000), true);
+                        price, price, true);
                 lotService.create(lot);
             }
 

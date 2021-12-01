@@ -1,7 +1,8 @@
 package com.zigzag.auction.controller;
 
 import com.zigzag.auction.dto.response.BidResponseDto;
-import com.zigzag.auction.exception.InvalidBidException;
+import com.zigzag.auction.exception.AuctionException;
+import com.zigzag.auction.exception.InvalidLotException;
 import com.zigzag.auction.exception.RequestValidationException;
 import com.zigzag.auction.model.Bid;
 import com.zigzag.auction.model.Lot;
@@ -37,15 +38,21 @@ public class BidController {
 
     @PostMapping("/{lotId}")
     public BidResponseDto makeABet(Authentication auth, @PathVariable Long lotId,
-                                   @RequestParam BigInteger bidSum) throws InvalidBidException {
+                                   @RequestParam BigInteger bidSum) throws AuctionException {
         UserDetails details = (UserDetails) auth.getPrincipal();
         User user = userService.findByEmail(details.getUsername());
         Lot lot = lotService.get(lotId);
+        if (!lotService.isValid(lot)) {
+            String message = String.format("Lot with id: %s is not valid", lotId);
+            throw new InvalidLotException(message);
+        }
         if (user.getEmail().equals(lot.getCreator().getEmail())) {
             throw new RequestValidationException("User can't make a bet on an own lot");
         }
 
         Bid bid = bidService.makeABet(user, lot, bidSum);
+        lot.setHighestPrice(bidSum);
+        lotService.update(lot);
         return mapper.mapToDto(bid);
     }
 }

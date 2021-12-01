@@ -20,8 +20,8 @@ public class BidServiceImpl implements BidService {
 
     @Override
     public Bid makeABet(User user, Lot lot, BigInteger bidSum) throws InvalidBidException {
-        if (bidSum.compareTo(lot.getStartPrice()) < 0) {
-            throw new InvalidBidException("Bid sum can't be less than existing one");
+        if (bidSum.compareTo(lot.getHighestPrice()) < 1) {
+            throw new InvalidBidException("Bid sum should be higher than existing one");
         }
         Bid bid = new Bid();
         bid.setBetTime(LocalDateTime.now());

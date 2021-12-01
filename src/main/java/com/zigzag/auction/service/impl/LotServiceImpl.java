@@ -1,10 +1,14 @@
 package com.zigzag.auction.service.impl;
 
 import com.zigzag.auction.exception.DataProcessingException;
+import com.zigzag.auction.model.Bid;
 import com.zigzag.auction.model.Lot;
 import com.zigzag.auction.repository.LotRepository;
 import com.zigzag.auction.service.LotService;
+import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -46,5 +50,19 @@ public class LotServiceImpl implements LotService {
     @Override
     public Page<Lot> getAllWithPagination(Pageable pageable) {
         return repository.findAll(pageable);
+    }
+
+    @Override
+    public boolean isValid(Lot lot) {
+        if (lot.getEndDate().isBefore(LocalDateTime.now())) {
+            lot.setActive(Boolean.FALSE);
+            Optional<Bid> highestBid = lot.getBids()
+                    .stream()
+                    .max(Comparator.comparing(Bid::getBidSum));
+            highestBid.ifPresent(bid -> lot.setWinner(bid.getOwner()));
+            repository.save(lot);
+            return false;
+        }
+        return true;
     }
 }
