@@ -55,14 +55,19 @@ public class LotServiceImpl implements LotService {
     @Override
     public boolean isValid(Lot lot) {
         if (lot.getEndDate().isBefore(LocalDateTime.now())) {
-            lot.setActive(Boolean.FALSE);
-            Optional<Bid> highestBid = lot.getBids()
-                    .stream()
-                    .max(Comparator.comparing(Bid::getBidSum));
-            highestBid.ifPresent(bid -> lot.setWinner(bid.getOwner()));
-            repository.save(lot);
+            closeLot(lot);
             return false;
         }
         return true;
+    }
+
+    @Override
+    public void closeLot(Lot lot) {
+        lot.setActive(Boolean.FALSE);
+        Optional<Bid> highestBid = lot.getBids()
+                .stream()
+                .max(Comparator.comparing(Bid::getBidSum));
+        highestBid.ifPresent(bid -> lot.setWinner(bid.getOwner()));
+        repository.save(lot);
     }
 }

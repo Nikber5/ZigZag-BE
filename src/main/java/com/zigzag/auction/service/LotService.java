@@ -8,4 +8,6 @@ public interface LotService extends AbstractCrudService<Lot, Long> {
     Page<Lot> getAllWithPagination(Pageable pageable);
 
     boolean isValid(Lot lot);
+
+    void closeLot(Lot lot);
 }
