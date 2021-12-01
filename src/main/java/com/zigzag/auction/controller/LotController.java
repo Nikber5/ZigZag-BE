@@ -60,7 +60,8 @@ public class LotController {
         product.setOwner(null);
         productService.update(product);
         Lot lot = new Lot(user, product, LocalDateTime.now(),
-                LocalDateTime.now().plusDays(TimeUtil.DEFAULT_LOT_DURATION_DAYS), startPrice, true);
+                LocalDateTime.now().plusDays(TimeUtil.DEFAULT_LOT_DURATION_DAYS),
+                startPrice, startPrice, true);
         return mapper.mapToDto(lotService.create(lot));
     }
 }

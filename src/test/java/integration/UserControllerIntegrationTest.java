@@ -98,14 +98,17 @@ public class UserControllerIntegrationTest {
     public void getAll_ok() throws Exception {
         String aliceToken = getToken(adminLoginDto);
 
+        int count = userService.getAll().size();
+
         mvc.perform(get("/users").header("Authorization", BEARER_PREFIX + aliceToken)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content()
                         .contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$[0].id", is(1)))
-                .andExpect(jsonPath("$[1].id", is(2)));
+                .andExpect(jsonPath("$.content[0].id", is(1)))
+                .andExpect(jsonPath("$.content[1].id", is(2)))
+                .andExpect(jsonPath("$.totalElements", is(count)));
     }
 
     @Test
