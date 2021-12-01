@@ -1,6 +1,7 @@
 package com.zigzag.auction.controller;
 
 import com.zigzag.auction.exception.InvalidCredentialsException;
+import com.zigzag.auction.exception.RequestValidationException;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -39,10 +40,22 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
     @ExceptionHandler(InvalidCredentialsException.class)
     protected ResponseEntity<Object> handleInvalidCredentialsException(
             InvalidCredentialsException ex, WebRequest request) {
+        Map<String, Object> body = createGenericBody(ex);
+        return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(RequestValidationException.class)
+    protected ResponseEntity<Object> handleRequestValidationException(
+            RequestValidationException ex, WebRequest request) {
+        Map<String, Object> body = createGenericBody(ex);
+        return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
+    }
+
+    private Map<String, Object> createGenericBody(Exception exception) {
         Map<String, Object> body = new LinkedHashMap<>();
         body.put("timestamp", new Date());
-        List<String> errors = List.of(ex.getMessage());
+        List<String> errors = List.of(exception.getMessage());
         body.put("errors", errors);
-        return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
+        return body;
     }
 }

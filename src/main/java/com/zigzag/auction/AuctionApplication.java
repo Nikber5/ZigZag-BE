@@ -7,7 +7,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @SpringBootApplication
-//@SpringBootApplication(exclude = { SecurityAutoConfiguration.class })
 public class AuctionApplication {
     @Bean
     public PasswordEncoder getEncoder() {
