@@ -5,14 +5,14 @@ import com.zigzag.auction.model.Lot;
 import com.zigzag.auction.model.Product;
 import com.zigzag.auction.model.User;
 import com.zigzag.auction.service.LotService;
+import com.zigzag.auction.service.ProductService;
 import com.zigzag.auction.service.UserService;
 import com.zigzag.auction.service.mapper.LotMapper;
 import com.zigzag.auction.util.TimeUtil;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,19 +27,20 @@ import org.springframework.web.bind.annotation.RestController;
 public class LotController {
     private final UserService userService;
     private final LotService lotService;
+    private final ProductService productService;
     private final LotMapper mapper;
 
-    public LotController(UserService userService, LotService lotService, LotMapper mapper) {
+    public LotController(UserService userService, LotService lotService,
+                         ProductService productService, LotMapper mapper) {
         this.userService = userService;
         this.lotService = lotService;
+        this.productService = productService;
         this.mapper = mapper;
     }
 
     @GetMapping
-    public List<LotResponseDto> getAll() {
-        return lotService.getAll().stream()
-                .map(mapper::mapToDto)
-                .collect(Collectors.toList());
+    public Page<LotResponseDto> getAll(Pageable pageable) {
+        return lotService.getAllWithPagination(pageable).map(mapper::mapToDto);
     }
 
     @GetMapping("/{id}")
@@ -51,16 +52,13 @@ public class LotController {
     public LotResponseDto createLot(Authentication auth, @RequestParam Long productId,
                                     @RequestParam BigInteger startPrice) {
         UserDetails details = (UserDetails) auth.getPrincipal();
-        User user = userService.getUserWithProductsByEmail(details.getUsername());
-        Optional<Product> productOptional = user.getProducts().stream()
-                .filter(p -> p.getId().equals(productId))
-                .findFirst();
-        if (productOptional.isEmpty()) {
+        User user = userService.findByEmail(details.getUsername());
+        Product product = productService.get(productId);
+        if (product.getOwner() == null || !product.getOwner().getEmail().equals(user.getEmail())) {
             throw new RuntimeException("User don't have product with id: " + productId);
         }
-        Product product = productOptional.get();
-        user.getProducts().remove(product);
-        userService.update(user);
+        product.setOwner(null);
+        productService.update(product);
         Lot lot = new Lot(user, product, LocalDateTime.now(),
                 LocalDateTime.now().plusDays(TimeUtil.DEFAULT_LOT_DURATION_DAYS), startPrice, true);
         return mapper.mapToDto(lotService.create(lot));

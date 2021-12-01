@@ -1,7 +1,9 @@
 package com.zigzag.auction.util;
 
+import com.zigzag.auction.model.Product;
 import com.zigzag.auction.model.Role;
 import com.zigzag.auction.model.User;
+import com.zigzag.auction.service.ProductService;
 import com.zigzag.auction.service.RoleService;
 import com.zigzag.auction.service.UserService;
 import java.util.Set;
@@ -12,10 +14,13 @@ import org.springframework.stereotype.Component;
 public class DataInitializer {
     private final UserService userService;
     private final RoleService roleService;
+    private final ProductService productService;
 
-    public DataInitializer(UserService userService, RoleService roleService) {
+    public DataInitializer(UserService userService, RoleService roleService,
+                           ProductService productService) {
         this.userService = userService;
         this.roleService = roleService;
+        this.productService = productService;
     }
 
     @PostConstruct
@@ -33,5 +38,15 @@ public class DataInitializer {
 
         userService.create(bob);
         userService.create(alice);
+
+        for (int i = 1; i < 41; i++) {
+            User user = userService.findByEmail(bob.getEmail());
+            Product product = new Product();
+            product.setName("New product # " + i);
+            product.setDescription("Description for product #" + i);
+            product.setOwner(bob);
+            productService.create(product);
+
+        }
     }
 }

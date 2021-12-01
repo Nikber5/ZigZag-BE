@@ -38,7 +38,7 @@ public class BidController {
     public BidResponseDto makeABet(Authentication auth, @PathVariable Long lotId,
                                    @RequestParam BigInteger bidSum) {
         UserDetails details = (UserDetails) auth.getPrincipal();
-        User user = userService.getUserWithProductsByEmail(details.getUsername());
+        User user = userService.findByEmail(details.getUsername());
         Lot lot = lotService.get(lotId);
         if (user.getEmail().equals(lot.getCreator().getEmail())) {
             throw new RequestValidationException("User can't make a bet on an own lot");

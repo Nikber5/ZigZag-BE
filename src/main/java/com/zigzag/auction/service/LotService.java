@@ -1,14 +1,9 @@
 package com.zigzag.auction.service;
 
 import com.zigzag.auction.model.Lot;
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
-public interface LotService {
-    List<Lot> getAll();
-
-    Lot get(Long id);
-
-    Lot create(Lot lot);
-
-    Lot update(Lot lot);
+public interface LotService extends AbstractCrudService<Lot, Long> {
+    Page<Lot> getAllWithPagination(Pageable pageable);
 }
