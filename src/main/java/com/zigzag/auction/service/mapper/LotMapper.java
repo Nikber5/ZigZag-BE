@@ -36,6 +36,7 @@ public class LotMapper implements ResponseDtoMapper<LotResponseDto, Lot> {
         dto.setStartDate(lot.getStartDate());
         dto.setEndDate(lot.getEndDate());
         dto.setStartPrice(lot.getStartPrice());
+        dto.setHighestPrice(lot.getHighestPrice());
         dto.setActive(lot.getActive());
 
         User winner = lot.getWinner();

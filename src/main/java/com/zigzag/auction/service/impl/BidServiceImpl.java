@@ -1,5 +1,6 @@
 package com.zigzag.auction.service.impl;
 
+import com.zigzag.auction.exception.InvalidBidException;
 import com.zigzag.auction.model.Bid;
 import com.zigzag.auction.model.Lot;
 import com.zigzag.auction.model.User;
@@ -18,7 +19,10 @@ public class BidServiceImpl implements BidService {
     }
 
     @Override
-    public Bid makeABet(User user, Lot lot, BigInteger bidSum) {
+    public Bid makeABet(User user, Lot lot, BigInteger bidSum) throws InvalidBidException {
+        if (bidSum.compareTo(lot.getHighestPrice()) < 1) {
+            throw new InvalidBidException("Bid sum should be higher than existing one");
+        }
         Bid bid = new Bid();
         bid.setBetTime(LocalDateTime.now());
         bid.setBidSum(bidSum);

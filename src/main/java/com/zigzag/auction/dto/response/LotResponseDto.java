@@ -14,6 +14,7 @@ public class LotResponseDto {
     private LocalDateTime startDate;
     private LocalDateTime endDate;
     private BigInteger startPrice;
+    private BigInteger highestPrice;
     private Boolean isActive;
     private Long winnerId;
     private String winnerName;
@@ -89,6 +90,14 @@ public class LotResponseDto {
 
     public void setStartPrice(BigInteger startPrice) {
         this.startPrice = startPrice;
+    }
+
+    public BigInteger getHighestPrice() {
+        return highestPrice;
+    }
+
+    public void setHighestPrice(BigInteger highestPrice) {
+        this.highestPrice = highestPrice;
     }
 
     public Boolean getActive() {

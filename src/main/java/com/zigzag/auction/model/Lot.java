@@ -19,6 +19,7 @@ public class Lot extends AbstractEntity {
     private LocalDateTime startDate;
     private LocalDateTime endDate;
     private BigInteger startPrice;
+    private BigInteger highestPrice;
     private Boolean isActive;
     @ManyToOne
     private User winner;
@@ -28,13 +29,14 @@ public class Lot extends AbstractEntity {
     public Lot() {
     }
 
-    public Lot(User owner, Product product, LocalDateTime startDate,
-               LocalDateTime endDate, BigInteger startPrice, Boolean isActive) {
+    public Lot(User owner, Product product, LocalDateTime startDate, LocalDateTime endDate,
+               BigInteger startPrice, BigInteger highestPrice, Boolean isActive) {
         this.creator = owner;
         this.product = product;
         this.startDate = startDate;
         this.endDate = endDate;
         this.startPrice = startPrice;
+        this.highestPrice = highestPrice;
         this.isActive = isActive;
     }
 
@@ -84,6 +86,14 @@ public class Lot extends AbstractEntity {
 
     public void setWinner(User winner) {
         this.winner = winner;
+    }
+
+    public BigInteger getHighestPrice() {
+        return highestPrice;
+    }
+
+    public void setHighestPrice(BigInteger highestPrice) {
+        this.highestPrice = highestPrice;
     }
 
     public Boolean getActive() {
