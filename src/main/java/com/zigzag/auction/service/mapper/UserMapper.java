@@ -19,6 +19,10 @@ public class UserMapper implements RequestDtoMapper<UserRequestDto, User>,
     @Override
     public UserResponseDto mapToDto(User user) {
         UserResponseDto dto = new UserResponseDto();
+        return populateDto(dto, user);
+    }
+
+    protected UserResponseDto populateDto(UserResponseDto dto, User user) {
         dto.setId(user.getId());
         dto.setEmail(user.getEmail());
         dto.setFirstName(user.getFirstName());

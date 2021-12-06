@@ -10,21 +10,20 @@ public class EagerUserMapper implements ResponseDtoMapper<EagerUserResponseDto, 
     private final ProductMapper productMapper;
     private final LotMapper lotMapper;
     private final BidMapper bidMapper;
+    private final UserMapper userMapper;
 
     public EagerUserMapper(ProductMapper productMapper, LotMapper lotMapper,
-                           BidMapper bidMapper) {
+                           BidMapper bidMapper, UserMapper userMapper) {
         this.productMapper = productMapper;
         this.lotMapper = lotMapper;
         this.bidMapper = bidMapper;
+        this.userMapper = userMapper;
     }
 
     @Override
     public EagerUserResponseDto mapToDto(User user) {
         EagerUserResponseDto dto = new EagerUserResponseDto();
-        dto.setId(user.getId());
-        dto.setEmail(user.getEmail());
-        dto.setFirstName(user.getFirstName());
-        dto.setSecondName(user.getSecondName());
+        dto = (EagerUserResponseDto) userMapper.populateDto(dto, user);
 
         dto.setLots(user.getLots().stream()
                 .map(lotMapper::mapToDto)
