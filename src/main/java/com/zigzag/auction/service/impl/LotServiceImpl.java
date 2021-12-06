@@ -28,7 +28,7 @@ public class LotServiceImpl implements LotService {
 
     @Override
     public Lot get(Long id) {
-        return repository.findById(id)
+        return repository.findLotByIdWithBids(id)
                 .orElseThrow(() -> new DataProcessingException("Can't get lot by id: " + id));
     }
 

@@ -35,11 +35,11 @@ class UserServiceImplTest {
         expected.setSecondName(UserArgumentsUtil.SECOND_NAME);
 
         when(encoder.encode(any(String.class))).thenReturn(UserArgumentsUtil.ENCODED_PASSWORD);
-        when(userRepository.findById(1L)).thenReturn(Optional.of(expected));
+        when(userRepository.findUserByIdWithProductsLotsAndBids(1L)).thenReturn(Optional.of(expected));
         when(userRepository.findAll()).thenReturn(List.of(expected));
         when(userRepository.save(any(User.class))).thenReturn(expected);
         when(userRepository.findByEmail(any(String.class))).thenReturn(Optional.of(expected));
-        when(userRepository.getUserWithProductsByEmail(any(String.class)))
+        when(userRepository.findUserWithProductsLotsAndBidsByEmail(any(String.class)))
                 .thenReturn(Optional.of(expected));
 
         userService = new UserServiceImpl(encoder, userRepository);
@@ -126,7 +126,7 @@ class UserServiceImplTest {
 
     @Test
     void getUserWithProductsByEmail_ok() {
-        User actual = userService.getUserWithProductsByEmail(UserArgumentsUtil.VALID_EMAIL);
+        User actual = userService.findUserWithProductsLotsAndBidsByEmail(UserArgumentsUtil.VALID_EMAIL);
         assertNotNull(actual);
         assertEquals(expected.getFirstName(), actual.getFirstName());
         assertEquals(expected.getSecondName(), actual.getSecondName());
@@ -136,10 +136,10 @@ class UserServiceImplTest {
 
     @Test
     void getUserWithProductsByEmailNullEmail_notOk() {
-        assertThrows(DataProcessingException.class, () -> userService.getUserWithProductsByEmail(null));
+        assertThrows(DataProcessingException.class, () -> userService.findUserWithProductsLotsAndBidsByEmail(null));
 
         try {
-            userService.getUserWithProductsByEmail(null);
+            userService.findUserWithProductsLotsAndBidsByEmail(null);
         } catch (DataProcessingException e) {
             String expected = String.format("Can't get user by email with products: %s", "null");
             assertEquals(expected, e.getMessage());

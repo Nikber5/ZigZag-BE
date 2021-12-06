@@ -1,14 +1,10 @@
 package com.zigzag.auction.dto.response;
 
-import java.util.List;
-
 public class UserResponseDto {
     private Long id;
     private String firstName;
     private String secondName;
     private String email;
-    private List<ProductResponseDto> products;
-    private List<LotResponseDto> lots;
 
     public Long getId() {
         return id;
@@ -40,21 +36,5 @@ public class UserResponseDto {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public List<ProductResponseDto> getProducts() {
-        return products;
-    }
-
-    public void setProducts(List<ProductResponseDto> products) {
-        this.products = products;
-    }
-
-    public List<LotResponseDto> getLots() {
-        return lots;
-    }
-
-    public void setLots(List<LotResponseDto> lots) {
-        this.lots = lots;
     }
 }
