@@ -6,6 +6,7 @@ import com.zigzag.auction.model.Lot;
 import com.zigzag.auction.repository.LotRepository;
 import com.zigzag.auction.service.LotService;
 import com.zigzag.auction.util.DateTimeUtil;
+import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -54,7 +55,8 @@ public class LotServiceImpl implements LotService {
 
     @Override
     public boolean isValid(Lot lot) {
-        if (lot.getEndDate().isBefore(DateTimeUtil.getCurrentUtcLocalDateTime())) {
+        if (lot.getEndDate().isBefore(DateTimeUtil.getCurrentUtcLocalDateTime())
+                && lot.getActive()) {
             closeLot(lot);
             return false;
         }
@@ -69,5 +71,15 @@ public class LotServiceImpl implements LotService {
                 .max(Comparator.comparing(Bid::getBidSum));
         highestBid.ifPresent(bid -> lot.setWinner(bid.getOwner()));
         repository.save(lot);
+    }
+
+    @Override
+    public Page<Long> getAllWithBidsWithPagination(Pageable pageable, LocalDateTime now) {
+        return repository.getExpiredLotsIds(pageable, now);
+    }
+
+    @Override
+    public List<Lot> getLotsByIds(List<Long> ids) {
+        return repository.getLotsByIds(ids);
     }
 }
