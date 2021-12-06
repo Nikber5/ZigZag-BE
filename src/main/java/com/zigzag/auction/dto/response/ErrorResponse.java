@@ -1,9 +1,6 @@
 package com.zigzag.auction.dto.response;
 
 import com.zigzag.auction.util.DateTimeUtil;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class ErrorResponse {
