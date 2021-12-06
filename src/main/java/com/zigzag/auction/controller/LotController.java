@@ -1,6 +1,7 @@
 package com.zigzag.auction.controller;
 
 import com.zigzag.auction.dto.response.LotResponseDto;
+import com.zigzag.auction.exception.RequestValidationException;
 import com.zigzag.auction.model.Lot;
 import com.zigzag.auction.model.Product;
 import com.zigzag.auction.model.User;
@@ -53,9 +54,10 @@ public class LotController {
                                     @RequestParam BigInteger startPrice) {
         UserDetails details = (UserDetails) auth.getPrincipal();
         User user = userService.findByEmail(details.getUsername());
+
         Product product = productService.get(productId);
         if (product.getOwner() == null || !product.getOwner().getEmail().equals(user.getEmail())) {
-            throw new RuntimeException("User don't have product with id: " + productId);
+            throw new RequestValidationException("User don't have product with id: " + productId);
         }
         product.setOwner(null);
         productService.update(product);
