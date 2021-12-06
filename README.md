@@ -11,6 +11,7 @@
   - spring.datasource.password=YOUR_PASSWORD
   - spring.datasource.driver-class-name=YOUR_DRIVER
   - spring.jpa.show-sql=true
+  - spring.jpa.open-in-view=false
 
 - Run a project
 - To see the structure of REST endpoints you can go to http://localhost:8080/swagger-ui.html
