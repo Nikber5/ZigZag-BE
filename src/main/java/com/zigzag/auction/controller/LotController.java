@@ -8,7 +8,7 @@ import com.zigzag.auction.service.LotService;
 import com.zigzag.auction.service.ProductService;
 import com.zigzag.auction.service.UserService;
 import com.zigzag.auction.service.mapper.LotMapper;
-import com.zigzag.auction.util.TimeUtil;
+import com.zigzag.auction.util.DateTimeUtil;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
 import org.springframework.data.domain.Page;
@@ -59,8 +59,9 @@ public class LotController {
         }
         product.setOwner(null);
         productService.update(product);
-        Lot lot = new Lot(user, product, LocalDateTime.now(),
-                LocalDateTime.now().plusDays(TimeUtil.DEFAULT_LOT_DURATION_DAYS),
+        LocalDateTime now = DateTimeUtil.getCurrentUtcLocalDateTime();
+        Lot lot = new Lot(user, product, now,
+                now.plusDays(DateTimeUtil.DEFAULT_LOT_DURATION_DAYS),
                 startPrice, startPrice, true);
         return mapper.mapToDto(lotService.create(lot));
     }

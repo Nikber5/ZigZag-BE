@@ -3,6 +3,7 @@ package com.zigzag.auction.exceptionhandler;
 import com.zigzag.auction.exception.AuctionException;
 import com.zigzag.auction.exception.InvalidCredentialsException;
 import com.zigzag.auction.exception.RequestValidationException;
+import com.zigzag.auction.util.DateTimeUtil;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
@@ -29,7 +30,7 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
             HttpStatus status,
             WebRequest request) {
         Map<String, Object> body = new LinkedHashMap<>();
-        body.put("timestamp", getCurrentUtcDateTime());
+        body.put("timestamp", DateTimeUtil.getCurrentUtcLocalDateTime());
         body.put("status", status.value());
         List<String> errors = ex.getBindingResult()
                 .getAllErrors()
@@ -63,15 +64,9 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
 
     private Map<String, Object> createGenericBody(Exception exception) {
         Map<String, Object> body = new LinkedHashMap<>();
-        body.put("timestamp", getCurrentUtcDateTime());
+        body.put("timestamp", DateTimeUtil.getCurrentUtcLocalDateTime());
         List<String> errors = List.of(exception.getMessage());
         body.put("errors", errors);
         return body;
-    }
-
-    private String getCurrentUtcDateTime() {
-        return LocalDateTime.now()
-                .atOffset(ZoneOffset.UTC)
-                .format(DateTimeFormatter.ISO_ZONED_DATE_TIME);
     }
 }

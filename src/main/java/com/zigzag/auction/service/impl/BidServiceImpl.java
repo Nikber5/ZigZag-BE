@@ -6,8 +6,8 @@ import com.zigzag.auction.model.Lot;
 import com.zigzag.auction.model.User;
 import com.zigzag.auction.repository.BidRepository;
 import com.zigzag.auction.service.BidService;
+import com.zigzag.auction.util.DateTimeUtil;
 import java.math.BigInteger;
-import java.time.LocalDateTime;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -24,7 +24,7 @@ public class BidServiceImpl implements BidService {
             throw new InvalidBidException("Bid sum should be higher than existing one");
         }
         Bid bid = new Bid();
-        bid.setBetTime(LocalDateTime.now());
+        bid.setBetTime(DateTimeUtil.getCurrentUtcLocalDateTime());
         bid.setBidSum(bidSum);
         bid.setOwner(user);
         bid.setLot(lot);

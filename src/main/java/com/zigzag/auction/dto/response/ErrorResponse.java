@@ -1,5 +1,6 @@
 package com.zigzag.auction.dto.response;
 
+import com.zigzag.auction.util.DateTimeUtil;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
@@ -17,11 +18,8 @@ public class ErrorResponse {
     }
 
     public static ErrorResponse of(RuntimeException exception, int status) {
-        String timestamp = LocalDateTime.now()
-                .atOffset(ZoneOffset.UTC)
-                .format(DateTimeFormatter.ISO_ZONED_DATE_TIME);
         List<String> errors = List.of(exception.getMessage());
-        return new ErrorResponse(timestamp, status, errors);
+        return new ErrorResponse(DateTimeUtil.getCurrentUtcLocalDateTime().toString(), status, errors);
     }
 
     public String getTimestamp() {
