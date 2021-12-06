@@ -1,5 +1,6 @@
 package com.zigzag.auction.config;
 
+import com.zigzag.auction.exceptionhandler.ExceptionHandlerConfigurer;
 import com.zigzag.auction.jwt.JwtConfigurer;
 import com.zigzag.auction.jwt.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,6 +66,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated()
                 .and()
                 .apply(new JwtConfigurer(jwtTokenProvider))
+                .and()
+                .apply(new ExceptionHandlerConfigurer())
                 .and()
                 .headers().frameOptions().disable();
     }
