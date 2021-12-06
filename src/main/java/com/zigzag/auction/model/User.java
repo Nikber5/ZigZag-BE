@@ -1,10 +1,8 @@
 package com.zigzag.auction.model;
 
-import java.util.List;
 import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -17,13 +15,14 @@ public class User extends AbstractEntity {
     private String email;
     private String password;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany
     private Set<Role> roles;
 
     @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "owner")
-    private List<Product> products;
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "creator")
-    private List<Lot> lots;
+    private Set<Product> products;
+
+    @OneToMany(mappedBy = "creator")
+    private Set<Lot> lots;
 
     @OneToMany(mappedBy = "owner", cascade = CascadeType.REMOVE)
     private Set<Bid> bids;
@@ -69,11 +68,11 @@ public class User extends AbstractEntity {
         this.password = password;
     }
 
-    public List<Lot> getLots() {
+    public Set<Lot> getLots() {
         return lots;
     }
 
-    public void setLots(List<Lot> lots) {
+    public void setLots(Set<Lot> lots) {
         this.lots = lots;
     }
 
@@ -85,11 +84,11 @@ public class User extends AbstractEntity {
         this.roles = roles;
     }
 
-    public List<Product> getProducts() {
+    public Set<Product> getProducts() {
         return products;
     }
 
-    public void setProducts(List<Product> products) {
+    public void setProducts(Set<Product> products) {
         this.products = products;
     }
 

@@ -1,12 +1,9 @@
 package com.zigzag.auction.service.mapper;
 
 import com.zigzag.auction.dto.response.LotResponseDto;
-import com.zigzag.auction.model.Bid;
 import com.zigzag.auction.model.Lot;
 import com.zigzag.auction.model.Product;
 import com.zigzag.auction.model.User;
-import java.util.List;
-import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -22,6 +19,11 @@ public class LotMapper implements ResponseDtoMapper<LotResponseDto, Lot> {
     @Override
     public LotResponseDto mapToDto(Lot lot) {
         LotResponseDto dto = new LotResponseDto();
+        return populateDto(dto, lot);
+
+    }
+
+    protected LotResponseDto populateDto(LotResponseDto dto, Lot lot) {
         dto.setId(lot.getId());
 
         User creator = lot.getCreator();
@@ -43,13 +45,6 @@ public class LotMapper implements ResponseDtoMapper<LotResponseDto, Lot> {
         if (winner != null) {
             dto.setWinnerId(winner.getId());
             dto.setWinnerName(userMapper.getName(winner));
-        }
-
-        List<Bid> bids = lot.getBids();
-        if (bids != null) {
-            dto.setBets(bids.stream()
-                    .map(bidMapper::mapToDto)
-                    .collect(Collectors.toList()));
         }
         return dto;
     }

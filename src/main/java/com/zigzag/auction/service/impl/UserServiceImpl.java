@@ -22,7 +22,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User get(Long id) {
-        return userRepository.findById(id)
+        return userRepository.findUserByIdWithProductsLotsAndBids(id)
                 .orElseThrow(() -> new DataProcessingException("Can't get user by id: " + id));
     }
 
@@ -54,8 +54,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getUserWithProductsByEmail(String email) {
-        return userRepository.getUserWithProductsByEmail(email)
+    public User findUserWithProductsLotsAndBidsByEmail(String email) {
+        return userRepository.findUserWithProductsLotsAndBidsByEmail(email)
                 .orElseThrow(() -> new DataProcessingException("Can't get user by email with products: " + email));
     }
 

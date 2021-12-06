@@ -1,13 +1,12 @@
 package com.zigzag.auction.controller;
 
 import com.zigzag.auction.dto.request.UserRequestDto;
+import com.zigzag.auction.dto.response.EagerUserResponseDto;
 import com.zigzag.auction.dto.response.UserResponseDto;
 import com.zigzag.auction.model.User;
 import com.zigzag.auction.service.UserService;
-import com.zigzag.auction.service.mapper.LotMapper;
-import com.zigzag.auction.service.mapper.ProductMapper;
+import com.zigzag.auction.service.mapper.EagerUserMapper;
 import com.zigzag.auction.service.mapper.UserMapper;
-import java.util.stream.Collectors;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
@@ -27,25 +26,22 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
     private final UserService userService;
     private final UserMapper userMapper;
-    private final ProductMapper productMapper;
-    private final LotMapper lotMapper;
+    private final EagerUserMapper eagerUserMapper;
 
-    public UserController(UserService userService, UserMapper mapper,
-                          ProductMapper productMapper, LotMapper lotMapper) {
+    public UserController(UserService userService, UserMapper userMapper, EagerUserMapper eagerUserMapper) {
         this.userService = userService;
-        this.userMapper = mapper;
-        this.productMapper = productMapper;
-        this.lotMapper = lotMapper;
+        this.userMapper = userMapper;
+        this.eagerUserMapper = eagerUserMapper;
     }
 
     @GetMapping
     public Page<UserResponseDto> getAll(Pageable pageable) {
-        return userService.getAllWithPagination(pageable).map(this::mapToDto);
+        return userService.getAllWithPagination(pageable).map(userMapper::mapToDto);
     }
 
     @GetMapping("/{id}")
-    public UserResponseDto get(@PathVariable Long id) {
-        return mapToDto(userService.get(id));
+    public EagerUserResponseDto get(@PathVariable Long id) {
+        return eagerUserMapper.mapToDto(userService.get(id));
     }
 
     @PutMapping
@@ -53,7 +49,7 @@ public class UserController {
         UserDetails details = (UserDetails) auth.getPrincipal();
         User user = userService.findByEmail(details.getUsername());
         updateUserDescriptionFromDto(user, dto);
-        return mapToDto(userService.update(user));
+        return userMapper.mapToDto(userService.update(user));
 
     }
 
@@ -64,8 +60,8 @@ public class UserController {
     }
 
     @GetMapping("/by-email")
-    public UserResponseDto getByEmail(@RequestParam String email) {
-        return mapToDto(userService.findByEmail(email));
+    public EagerUserResponseDto getByEmail(@RequestParam String email) {
+        return eagerUserMapper.mapToDto(userService.findUserWithProductsLotsAndBidsByEmail(email));
     }
 
     private void updateUserDescriptionFromDto(User user, UserRequestDto dto) {
@@ -75,16 +71,5 @@ public class UserController {
         if (StringUtils.hasLength(dto.getSecondName())) {
             user.setSecondName(dto.getSecondName());
         }
-    }
-
-    private UserResponseDto mapToDto(User user) {
-        UserResponseDto dto = userMapper.mapToDto(user);
-        dto.setLots(user.getLots().stream()
-                .map(lotMapper::mapToDto)
-                .collect(Collectors.toList()));
-        dto.setProducts(user.getProducts().stream()
-                .map(productMapper::mapToDto)
-                .collect(Collectors.toList()));
-        return dto;
     }
 }

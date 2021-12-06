@@ -8,6 +8,7 @@ import com.zigzag.auction.model.User;
 import com.zigzag.auction.service.LotService;
 import com.zigzag.auction.service.ProductService;
 import com.zigzag.auction.service.UserService;
+import com.zigzag.auction.service.mapper.EagerLotMapper;
 import com.zigzag.auction.service.mapper.LotMapper;
 import com.zigzag.auction.util.DateTimeUtil;
 import java.math.BigInteger;
@@ -30,13 +31,16 @@ public class LotController {
     private final LotService lotService;
     private final ProductService productService;
     private final LotMapper mapper;
+    private final EagerLotMapper eagerLotMapper;
 
     public LotController(UserService userService, LotService lotService,
-                         ProductService productService, LotMapper mapper) {
+                         ProductService productService, LotMapper mapper,
+                         EagerLotMapper eagerLotMapper) {
         this.userService = userService;
         this.lotService = lotService;
         this.productService = productService;
         this.mapper = mapper;
+        this.eagerLotMapper = eagerLotMapper;
     }
 
     @GetMapping
@@ -46,7 +50,7 @@ public class LotController {
 
     @GetMapping("/{id}")
     public LotResponseDto get(@PathVariable Long id) {
-        return mapper.mapToDto(lotService.get(id));
+        return eagerLotMapper.mapToDto(lotService.get(id));
     }
 
     @PostMapping

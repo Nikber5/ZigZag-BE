@@ -2,7 +2,6 @@ package com.zigzag.auction.dto.response;
 
 import java.math.BigInteger;
 import java.time.LocalDateTime;
-import java.util.List;
 
 public class LotResponseDto {
     private Long id;
@@ -18,7 +17,6 @@ public class LotResponseDto {
     private Boolean isActive;
     private Long winnerId;
     private String winnerName;
-    private List<BidResponseDto> bets;
 
     public Long getId() {
         return id;
@@ -122,13 +120,5 @@ public class LotResponseDto {
 
     public void setWinnerName(String winnerName) {
         this.winnerName = winnerName;
-    }
-
-    public List<BidResponseDto> getBets() {
-        return bets;
-    }
-
-    public void setBets(List<BidResponseDto> bets) {
-        this.bets = bets;
     }
 }
