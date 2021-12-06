@@ -5,7 +5,7 @@ import com.zigzag.auction.model.Bid;
 import com.zigzag.auction.model.Lot;
 import com.zigzag.auction.repository.LotRepository;
 import com.zigzag.auction.service.LotService;
-import java.time.LocalDateTime;
+import com.zigzag.auction.util.DateTimeUtil;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -28,7 +28,7 @@ public class LotServiceImpl implements LotService {
 
     @Override
     public Lot get(Long id) {
-        return repository.findById(id)
+        return repository.findLotByIdWithBids(id)
                 .orElseThrow(() -> new DataProcessingException("Can't get lot by id: " + id));
     }
 
@@ -54,7 +54,7 @@ public class LotServiceImpl implements LotService {
 
     @Override
     public boolean isValid(Lot lot) {
-        if (lot.getEndDate().isBefore(LocalDateTime.now())) {
+        if (lot.getEndDate().isBefore(DateTimeUtil.getCurrentUtcLocalDateTime())) {
             closeLot(lot);
             return false;
         }
