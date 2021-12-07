@@ -4,6 +4,7 @@ import com.zigzag.auction.exception.DataProcessingException;
 import com.zigzag.auction.model.Bid;
 import com.zigzag.auction.model.Lot;
 import com.zigzag.auction.repository.LotRepository;
+import com.zigzag.auction.repository.ProductRepository;
 import com.zigzag.auction.service.LotService;
 import com.zigzag.auction.util.DateTimeUtil;
 import java.time.LocalDateTime;
@@ -17,9 +18,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class LotServiceImpl implements LotService {
     private final LotRepository repository;
+    private final ProductRepository productRepository;
 
-    public LotServiceImpl(LotRepository repository) {
+    public LotServiceImpl(LotRepository repository, ProductRepository productRepository) {
         this.repository = repository;
+        this.productRepository = productRepository;
     }
 
     @Override
@@ -70,6 +73,13 @@ public class LotServiceImpl implements LotService {
                 .stream()
                 .max(Comparator.comparing(Bid::getBidSum));
         highestBid.ifPresent(bid -> lot.setWinner(bid.getOwner()));
+        if (highestBid.isPresent()) {
+            highestBid.ifPresent(bid -> lot.getProduct().setOwner(bid.getOwner()));
+            lot.getProduct().setOwner(highestBid.get().getOwner());
+        } else {
+            lot.getProduct().setOwner(lot.getCreator());
+        }
+        productRepository.save(lot.getProduct());
         repository.save(lot);
     }
 
@@ -80,6 +90,6 @@ public class LotServiceImpl implements LotService {
 
     @Override
     public List<Lot> getLotsByIds(List<Long> ids) {
-        return repository.getLotsByIds(ids);
+        return repository.getLotsWithBidsByIds(ids);
     }
 }

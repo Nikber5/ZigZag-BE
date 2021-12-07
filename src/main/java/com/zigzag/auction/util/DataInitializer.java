@@ -1,10 +1,12 @@
 package com.zigzag.auction.util;
 
+import com.zigzag.auction.exception.AuctionException;
 import com.zigzag.auction.model.Lot;
 import com.zigzag.auction.model.Product;
 import com.zigzag.auction.model.Role;
 import com.zigzag.auction.model.User;
 import com.zigzag.auction.service.AuthenticationService;
+import com.zigzag.auction.service.BidService;
 import com.zigzag.auction.service.LotService;
 import com.zigzag.auction.service.ProductService;
 import com.zigzag.auction.service.RoleService;
@@ -22,19 +24,21 @@ public class DataInitializer {
     private final ProductService productService;
     private final LotService lotService;
     private final AuthenticationService authenticationService;
+    private final BidService bidService;
 
     public DataInitializer(UserService userService, RoleService roleService,
                            ProductService productService, LotService lotService,
-                           AuthenticationService authenticationService) {
+                           AuthenticationService authenticationService, BidService bidService) {
         this.userService = userService;
         this.roleService = roleService;
         this.productService = productService;
         this.lotService = lotService;
         this.authenticationService = authenticationService;
+        this.bidService = bidService;
     }
 
     @PostConstruct
-    public void init() {
+    public void init() throws AuctionException {
         // Adding all roles
         roleService.add(new Role(Role.RoleName.ROLE_ADMIN));
         roleService.add(new Role(Role.RoleName.ROLE_USER));
@@ -49,7 +53,7 @@ public class DataInitializer {
         userService.create(bob);
         userService.create(alice);
 
-        authenticationService.register(new User("John", "John@gmail.com", "12345678"));
+        User john = authenticationService.register(new User("John", "John@gmail.com", "12345678"));
 
         for (int i = 1; i < 41; i++) {
             Product product = createProduct("New product # " + i, "Description for product #" + i, bob);
@@ -63,8 +67,10 @@ public class DataInitializer {
                         now.plusDays(DateTimeUtil.DEFAULT_LOT_DURATION_DAYS),
                         price, price, true);
                 lotService.create(lot);
+                if (i < 5) {
+                    makeABet(lot, john);
+                }
             }
-
         }
     }
 
@@ -74,5 +80,12 @@ public class DataInitializer {
         product.setDescription(description);
         product.setOwner(owner);
         return productService.create(product);
+    }
+
+    public void makeABet(Lot lot, User user) throws AuctionException {
+        BigInteger bidSum = BigInteger.valueOf(1100);
+        bidService.makeABet(user, lot, bidSum);
+        lot.setHighestPrice(bidSum);
+        lotService.update(lot);
     }
 }
