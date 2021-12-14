@@ -14,4 +14,4 @@
   - spring.jpa.open-in-view=false
 
 - Run a project
-- To see the structure of REST endpoints you can go to http://localhost:8080/swagger-ui.html
+- To see the structure of REST endpoints you can go to http://localhost:8080/swagger-ui/

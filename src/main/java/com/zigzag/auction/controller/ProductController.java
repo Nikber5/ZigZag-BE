@@ -2,11 +2,13 @@ package com.zigzag.auction.controller;
 
 import com.zigzag.auction.dto.request.ProductRequestDto;
 import com.zigzag.auction.dto.response.ProductResponseDto;
+import com.zigzag.auction.lib.ApiPageable;
 import com.zigzag.auction.model.Product;
 import com.zigzag.auction.model.User;
 import com.zigzag.auction.service.ProductService;
 import com.zigzag.auction.service.UserService;
 import com.zigzag.auction.service.mapper.ProductMapper;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
@@ -32,6 +34,9 @@ public class ProductController {
     }
 
     @GetMapping
+    @ApiOperation(value = "Returns all products that belong to user.",
+            notes = "User must be authenticated.")
+    @ApiPageable
     public Page<ProductResponseDto> getMyProducts(Authentication auth, Pageable pageable) {
         UserDetails details = (UserDetails) auth.getPrincipal();
         User user = userService.findByEmail(details.getUsername());
@@ -40,6 +45,8 @@ public class ProductController {
     }
 
     @PostMapping
+    @ApiOperation(value = "Creates a product for user.",
+            notes = "User must be authenticated.")
     public ProductResponseDto createProduct(Authentication auth,
                                             @RequestBody ProductRequestDto dto) {
         Product product = mapper.mapToModel(dto);

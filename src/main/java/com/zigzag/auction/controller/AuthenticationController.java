@@ -10,6 +10,7 @@ import com.zigzag.auction.model.User;
 import com.zigzag.auction.service.AuthenticationService;
 import com.zigzag.auction.service.mapper.RegisterMapper;
 import com.zigzag.auction.service.mapper.UserMapper;
+import io.swagger.annotations.ApiOperation;
 import java.util.Map;
 import java.util.stream.Collectors;
 import javax.validation.Valid;
@@ -36,6 +37,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/register")
+    @ApiOperation(value = "Endpoint to register a new user")
     public UserResponseDto register(@Valid @RequestBody UserRegisterRequestDto requestDto) {
         if (!authenticationService.isUnique(requestDto.getEmail())) {
             throw new InvalidCredentialsException("Email must be unique");
@@ -46,6 +48,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/login")
+    @ApiOperation(value = "Login operation. You have to pass login and password to get JWT token for authentication.")
     public ResponseEntity<Object> login(@RequestBody @Valid UserLoginDto userLoginDto)
             throws AuthenticationException {
         User user = authenticationService.login(userLoginDto.getLogin(),
