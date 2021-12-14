@@ -1,7 +1,9 @@
 package com.zigzag.auction.controller;
 
+import com.zigzag.auction.dto.response.EagerLotResponseDto;
 import com.zigzag.auction.dto.response.LotResponseDto;
 import com.zigzag.auction.exception.RequestValidationException;
+import com.zigzag.auction.lib.ApiPageable;
 import com.zigzag.auction.model.Lot;
 import com.zigzag.auction.model.Product;
 import com.zigzag.auction.model.User;
@@ -11,6 +13,7 @@ import com.zigzag.auction.service.UserService;
 import com.zigzag.auction.service.mapper.EagerLotMapper;
 import com.zigzag.auction.service.mapper.LotMapper;
 import com.zigzag.auction.util.DateTimeUtil;
+import io.swagger.annotations.ApiOperation;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
 import org.springframework.data.domain.Page;
@@ -44,16 +47,21 @@ public class LotController {
     }
 
     @GetMapping
+    @ApiOperation(value = "Returns all lots with pagination.")
+    @ApiPageable
     public Page<LotResponseDto> getAll(Pageable pageable) {
         return lotService.getAllWithPagination(pageable).map(mapper::mapToDto);
     }
 
     @GetMapping("/{id}")
-    public LotResponseDto get(@PathVariable Long id) {
+    @ApiOperation(value = "Returns a lot by id with bids.")
+    public EagerLotResponseDto get(@PathVariable Long id) {
         return eagerLotMapper.mapToDto(lotService.get(id));
     }
 
     @PostMapping
+    @ApiOperation(value = "Creates a lot by product id and start price.",
+            notes = "User have to be authenticated.")
     public LotResponseDto createLot(Authentication auth, @RequestParam Long productId,
                                     @RequestParam BigInteger startPrice) {
         UserDetails details = (UserDetails) auth.getPrincipal();
