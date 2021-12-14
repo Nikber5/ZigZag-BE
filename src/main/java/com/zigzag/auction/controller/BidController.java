@@ -11,6 +11,7 @@ import com.zigzag.auction.service.BidService;
 import com.zigzag.auction.service.LotService;
 import com.zigzag.auction.service.UserService;
 import com.zigzag.auction.service.mapper.BidMapper;
+import io.swagger.annotations.ApiOperation;
 import java.math.BigInteger;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -37,6 +38,9 @@ public class BidController {
     }
 
     @PostMapping("/{lotId}")
+    @ApiOperation(value = "Make a bet for defined lot.",
+            notes = "User must to be authenticated to make a bet "
+                    + "and it is obligatory to pass a lot id and sum of a bid")
     public BidResponseDto makeABet(Authentication auth, @PathVariable Long lotId,
                                    @RequestParam BigInteger bidSum) throws AuctionException {
         UserDetails details = (UserDetails) auth.getPrincipal();
