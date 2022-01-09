@@ -13,7 +13,7 @@ public interface LotService extends AbstractCrudService<Lot, Long> {
 
     void closeLot(Lot lot);
 
-    Page<Long> getAllWithBidsWithPagination(Pageable pageable, LocalDateTime now);
+    Page<Long> getExpiredWithBidsWithPagination(Pageable pageable, LocalDateTime now);
 
     List<Lot> getLotsByIds(List<Long> ids);
 }
