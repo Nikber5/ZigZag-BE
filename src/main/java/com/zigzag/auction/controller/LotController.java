@@ -18,7 +18,6 @@ import com.zigzag.auction.util.DateTimeUtil;
 import io.swagger.annotations.ApiOperation;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
-import javax.servlet.http.HttpServletResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
