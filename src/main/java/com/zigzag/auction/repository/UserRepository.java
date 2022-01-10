@@ -7,13 +7,15 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface UserRepository extends JpaRepository<User, Long> {
     @Query("SELECT u FROM User u LEFT JOIN FETCH u.products "
-            + "LEFT JOIN FETCH u.lots LEFT JOIN FETCH u.bids WHERE u.id = :id")
-    Optional<User> findUserByIdWithProductsLotsAndBids(Long id);
+            + "LEFT JOIN FETCH u.lots LEFT JOIN FETCH u.bids "
+            + "LEFT JOIN FETCH u.likedLots WHERE u.id = :id")
+    Optional<User> findFullUserInfoById(Long id);
 
     @Query("SELECT u FROM User u LEFT JOIN FETCH u.roles WHERE u.email = :email")
     Optional<User> findByEmail(String email);
 
     @Query("SELECT u FROM User u LEFT JOIN FETCH u.products "
-            + "LEFT JOIN FETCH u.lots LEFT JOIN FETCH u.bids WHERE u.email = :email")
-    Optional<User> findUserWithProductsLotsAndBidsByEmail(String email);
+            + "LEFT JOIN FETCH u.lots LEFT JOIN FETCH u.bids "
+            + "LEFT JOIN FETCH u.likedLots WHERE u.email = :email")
+    Optional<User> findFullUserInfoByEmail(String email);
 }

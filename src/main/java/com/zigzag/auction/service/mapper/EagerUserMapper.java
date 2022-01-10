@@ -34,6 +34,9 @@ public class EagerUserMapper implements ResponseDtoMapper<EagerUserResponseDto, 
         dto.setBids(user.getBids().stream()
                 .map(bidMapper::mapToDto)
                 .collect(Collectors.toList()));
+        dto.setLikedLots(user.getLikedLots().stream()
+                .map(lotMapper::mapToDto)
+                .collect(Collectors.toList()));
         return dto;
     }
 }
