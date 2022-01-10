@@ -18,6 +18,7 @@ import com.zigzag.auction.util.DateTimeUtil;
 import io.swagger.annotations.ApiOperation;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
+import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
@@ -85,7 +86,7 @@ public class LotController {
     @PostMapping("/like")
     @ApiOperation(value = "Add a lot to liked lots of a user.",
             notes = "User have to be authenticated.")
-    public void createLot(Authentication auth, @RequestParam Long lotId) throws AuctionException {
+    public void likeLot(Authentication auth, @RequestParam Long lotId) throws AuctionException {
         UserDetails details = (UserDetails) auth.getPrincipal();
         User user = userService.findFullUserInfoByEmail(details.getUsername());
 
@@ -93,6 +94,27 @@ public class LotController {
             Lot lot = lotService.get(lotId);
             user.getLikedLots().add(lot);
             userService.update(user);
+        } catch (DataProcessingException e) {
+            throw new AuctionException(String.format("Can't find lot with id: %s", lotId));
+        }
+    }
+
+    @PostMapping("/dislike")
+    @ApiOperation(value = "Remove a lot from liked lots of a user.",
+            notes = "User have to be authenticated.")
+    public void dislikeLot(Authentication auth, @RequestParam Long lotId) throws AuctionException {
+        UserDetails details = (UserDetails) auth.getPrincipal();
+        User user = userService.findFullUserInfoByEmail(details.getUsername());
+
+        try {
+            Optional<Lot> optionalLot = user.getLikedLots()
+                    .stream()
+                    .filter(lot -> lot.getId().equals(lotId))
+                    .findFirst();
+            if (optionalLot.isPresent()) {
+                user.getLikedLots().remove(optionalLot.get());
+                userService.update(user);
+            }
         } catch (DataProcessingException e) {
             throw new AuctionException(String.format("Can't find lot with id: %s", lotId));
         }
