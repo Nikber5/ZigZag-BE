@@ -18,4 +18,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
             + "LEFT JOIN FETCH u.lots LEFT JOIN FETCH u.bids "
             + "LEFT JOIN FETCH u.likedLots WHERE u.email = :email")
     Optional<User> findFullUserInfoByEmail(String email);
+
+    @Query("SELECT u FROM User u LEFT JOIN FETCH u.likedLots WHERE u.email = :email")
+    User getUserWithLikedLots(String email);
 }

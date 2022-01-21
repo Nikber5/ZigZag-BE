@@ -17,6 +17,7 @@ public class LotResponseDto {
     private Boolean isActive;
     private Long winnerId;
     private String winnerName;
+    private Boolean isLiked;
 
     public Long getId() {
         return id;
@@ -120,5 +121,13 @@ public class LotResponseDto {
 
     public void setWinnerName(String winnerName) {
         this.winnerName = winnerName;
+    }
+
+    public Boolean getLiked() {
+        return isLiked;
+    }
+
+    public void setLiked(Boolean liked) {
+        isLiked = liked;
     }
 }

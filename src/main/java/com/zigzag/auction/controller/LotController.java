@@ -9,6 +9,7 @@ import com.zigzag.auction.lib.ApiPageable;
 import com.zigzag.auction.model.Lot;
 import com.zigzag.auction.model.Product;
 import com.zigzag.auction.model.User;
+import com.zigzag.auction.service.LikeService;
 import com.zigzag.auction.service.LotService;
 import com.zigzag.auction.service.ProductService;
 import com.zigzag.auction.service.UserService;
@@ -38,28 +39,33 @@ public class LotController {
     private final ProductService productService;
     private final LotMapper mapper;
     private final EagerLotMapper eagerLotMapper;
+    private final LikeService likeService;
 
     public LotController(UserService userService, LotService lotService,
                          ProductService productService, LotMapper mapper,
-                         EagerLotMapper eagerLotMapper) {
+                         EagerLotMapper eagerLotMapper, LikeService likeService) {
         this.userService = userService;
         this.lotService = lotService;
         this.productService = productService;
         this.mapper = mapper;
         this.eagerLotMapper = eagerLotMapper;
+        this.likeService = likeService;
     }
 
     @GetMapping
     @ApiOperation(value = "Returns all lots with pagination.")
     @ApiPageable
-    public Page<LotResponseDto> getAll(Pageable pageable) {
-        return lotService.getAllWithPagination(pageable).map(mapper::mapToDto);
+    public Page<LotResponseDto> getAll(Pageable pageable, Authentication auth) {
+        Page<LotResponseDto> dtoPage = lotService.getAllWithPagination(pageable)
+                .map(mapper::mapToDto);
+        return likeService.populateLikes(dtoPage, auth);
     }
 
     @GetMapping("/{id}")
     @ApiOperation(value = "Returns a lot by id with bids.")
-    public EagerLotResponseDto get(@PathVariable Long id) {
-        return eagerLotMapper.mapToDto(lotService.get(id));
+    public EagerLotResponseDto get(@PathVariable Long id, Authentication auth) {
+        EagerLotResponseDto dto = eagerLotMapper.mapToDto(lotService.get(id));
+        return (EagerLotResponseDto) likeService.populateLikes(dto, auth);
     }
 
     @PostMapping
