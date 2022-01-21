@@ -10,4 +10,6 @@ public interface UserService extends AbstractCrudService<User, Long> {
     User findFullUserInfoByEmail(String email);
 
     Page<User> getAllWithPagination(Pageable pageable);
+
+    User getUserWithLikedLots(String email);
 }

@@ -63,4 +63,9 @@ public class UserServiceImpl implements UserService {
     public Page<User> getAllWithPagination(Pageable pageable) {
         return userRepository.findAll(pageable);
     }
+
+    @Override
+    public User getUserWithLikedLots(String email) {
+        return userRepository.getUserWithLikedLots(email);
+    }
 }
