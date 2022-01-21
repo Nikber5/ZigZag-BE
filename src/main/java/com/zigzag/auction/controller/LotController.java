@@ -2,11 +2,14 @@ package com.zigzag.auction.controller;
 
 import com.zigzag.auction.dto.response.EagerLotResponseDto;
 import com.zigzag.auction.dto.response.LotResponseDto;
+import com.zigzag.auction.exception.AuctionException;
+import com.zigzag.auction.exception.DataProcessingException;
 import com.zigzag.auction.exception.RequestValidationException;
 import com.zigzag.auction.lib.ApiPageable;
 import com.zigzag.auction.model.Lot;
 import com.zigzag.auction.model.Product;
 import com.zigzag.auction.model.User;
+import com.zigzag.auction.service.LikeService;
 import com.zigzag.auction.service.LotService;
 import com.zigzag.auction.service.ProductService;
 import com.zigzag.auction.service.UserService;
@@ -16,6 +19,7 @@ import com.zigzag.auction.util.DateTimeUtil;
 import io.swagger.annotations.ApiOperation;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
+import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
@@ -35,28 +39,33 @@ public class LotController {
     private final ProductService productService;
     private final LotMapper mapper;
     private final EagerLotMapper eagerLotMapper;
+    private final LikeService likeService;
 
     public LotController(UserService userService, LotService lotService,
                          ProductService productService, LotMapper mapper,
-                         EagerLotMapper eagerLotMapper) {
+                         EagerLotMapper eagerLotMapper, LikeService likeService) {
         this.userService = userService;
         this.lotService = lotService;
         this.productService = productService;
         this.mapper = mapper;
         this.eagerLotMapper = eagerLotMapper;
+        this.likeService = likeService;
     }
 
     @GetMapping
     @ApiOperation(value = "Returns all lots with pagination.")
     @ApiPageable
-    public Page<LotResponseDto> getAll(Pageable pageable) {
-        return lotService.getAllWithPagination(pageable).map(mapper::mapToDto);
+    public Page<LotResponseDto> getAll(Pageable pageable, Authentication auth) {
+        Page<LotResponseDto> dtoPage = lotService.getAllWithPagination(pageable)
+                .map(mapper::mapToDto);
+        return likeService.populateLikes(dtoPage, auth);
     }
 
     @GetMapping("/{id}")
     @ApiOperation(value = "Returns a lot by id with bids.")
-    public EagerLotResponseDto get(@PathVariable Long id) {
-        return eagerLotMapper.mapToDto(lotService.get(id));
+    public EagerLotResponseDto get(@PathVariable Long id, Authentication auth) {
+        EagerLotResponseDto dto = eagerLotMapper.mapToDto(lotService.get(id));
+        return (EagerLotResponseDto) likeService.populateLikes(dto, auth);
     }
 
     @PostMapping
@@ -78,5 +87,42 @@ public class LotController {
                 now.plusDays(DateTimeUtil.DEFAULT_LOT_DURATION_DAYS),
                 startPrice, startPrice, true);
         return mapper.mapToDto(lotService.create(lot));
+    }
+
+    @PostMapping("/like")
+    @ApiOperation(value = "Add a lot to liked lots of a user.",
+            notes = "User have to be authenticated.")
+    public void likeLot(Authentication auth, @RequestParam Long lotId) throws AuctionException {
+        UserDetails details = (UserDetails) auth.getPrincipal();
+        User user = userService.findFullUserInfoByEmail(details.getUsername());
+
+        try {
+            Lot lot = lotService.get(lotId);
+            user.getLikedLots().add(lot);
+            userService.update(user);
+        } catch (DataProcessingException e) {
+            throw new AuctionException(String.format("Can't find lot with id: %s", lotId));
+        }
+    }
+
+    @PostMapping("/dislike")
+    @ApiOperation(value = "Remove a lot from liked lots of a user.",
+            notes = "User have to be authenticated.")
+    public void dislikeLot(Authentication auth, @RequestParam Long lotId) throws AuctionException {
+        UserDetails details = (UserDetails) auth.getPrincipal();
+        User user = userService.findFullUserInfoByEmail(details.getUsername());
+
+        try {
+            Optional<Lot> optionalLot = user.getLikedLots()
+                    .stream()
+                    .filter(lot -> lot.getId().equals(lotId))
+                    .findFirst();
+            if (optionalLot.isPresent()) {
+                user.getLikedLots().remove(optionalLot.get());
+                userService.update(user);
+            }
+        } catch (DataProcessingException e) {
+            throw new AuctionException(String.format("Can't find lot with id: %s", lotId));
+        }
     }
 }

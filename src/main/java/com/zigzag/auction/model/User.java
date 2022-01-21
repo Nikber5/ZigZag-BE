@@ -27,6 +27,9 @@ public class User extends AbstractEntity {
     @OneToMany(mappedBy = "owner", cascade = CascadeType.REMOVE)
     private Set<Bid> bids;
 
+    @ManyToMany
+    private Set<Lot> likedLots;
+
     public User() {
     }
 
@@ -98,6 +101,14 @@ public class User extends AbstractEntity {
 
     public void setBids(Set<Bid> bids) {
         this.bids = bids;
+    }
+
+    public Set<Lot> getLikedLots() {
+        return likedLots;
+    }
+
+    public void setLikedLots(Set<Lot> likedLots) {
+        this.likedLots = likedLots;
     }
 
     @Override

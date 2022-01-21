@@ -6,6 +6,7 @@ public class EagerUserResponseDto extends UserResponseDto {
     private List<ProductResponseDto> products;
     private List<LotResponseDto> lots;
     private List<BidResponseDto> bids;
+    private List<LotResponseDto> likedLots;
 
     public List<ProductResponseDto> getProducts() {
         return products;
@@ -29,5 +30,13 @@ public class EagerUserResponseDto extends UserResponseDto {
 
     public void setBids(List<BidResponseDto> bids) {
         this.bids = bids;
+    }
+
+    public List<LotResponseDto> getLikedLots() {
+        return likedLots;
+    }
+
+    public void setLikedLots(List<LotResponseDto> likedLots) {
+        this.likedLots = likedLots;
     }
 }

@@ -58,12 +58,8 @@ public class LotServiceImpl implements LotService {
 
     @Override
     public boolean isValid(Lot lot) {
-        if (lot.getEndDate().isBefore(DateTimeUtil.getCurrentUtcLocalDateTime())
-                && lot.getActive()) {
-            closeLot(lot);
-            return false;
-        }
-        return true;
+        return !lot.getEndDate().isBefore(DateTimeUtil.getCurrentUtcLocalDateTime())
+                || !lot.getActive();
     }
 
     @Override
@@ -84,7 +80,7 @@ public class LotServiceImpl implements LotService {
     }
 
     @Override
-    public Page<Long> getAllWithBidsWithPagination(Pageable pageable, LocalDateTime now) {
+    public Page<Long> getExpiredWithBidsWithPagination(Pageable pageable, LocalDateTime now) {
         return repository.getExpiredLotsIds(pageable, now);
     }
 

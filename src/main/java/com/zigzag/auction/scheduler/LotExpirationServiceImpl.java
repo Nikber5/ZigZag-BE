@@ -23,18 +23,21 @@ public class LotExpirationServiceImpl {
         Pageable pageRequest = PageRequest.of(0, 20);
         //System.out.println("Perform query");
         Page<Long> lotsPage = lotService
-                .getAllWithBidsWithPagination(pageRequest, DateTimeUtil.getCurrentUtcLocalDateTime());
+                .getExpiredWithBidsWithPagination(pageRequest, DateTimeUtil.getCurrentUtcLocalDateTime());
 
         while (!lotsPage.isEmpty()) {
             pageRequest = pageRequest.next();
             lotService.getLotsByIds(lotsPage.getContent()).forEach(this::disableLotIfNeeded);
-            lotsPage = lotService.getAllWithBidsWithPagination(pageRequest, DateTimeUtil.getCurrentUtcLocalDateTime());
+            lotsPage = lotService
+                    .getExpiredWithBidsWithPagination(pageRequest, DateTimeUtil.getCurrentUtcLocalDateTime());
         }
         //System.out.println("Empty page ");
     }
 
     private void disableLotIfNeeded(Lot lot) {
         //System.out.println("Checking lot with id: " + lot.getId() + " " + lot);
-        lotService.isValid(lot);
+        if (!lotService.isValid(lot)) {
+            lotService.closeLot(lot);
+        }
     }
 }

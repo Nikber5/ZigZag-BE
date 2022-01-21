@@ -74,7 +74,7 @@ public class UserController {
     @ApiOperation(value = "Gets user by email.",
             notes = "Method for an admin.")
     public EagerUserResponseDto getByEmail(@RequestParam String email) {
-        return eagerUserMapper.mapToDto(userService.findUserWithProductsLotsAndBidsByEmail(email));
+        return eagerUserMapper.mapToDto(userService.findFullUserInfoByEmail(email));
     }
 
     private void updateUserDescriptionFromDto(User user, UserRequestDto dto) {

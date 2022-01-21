@@ -7,7 +7,9 @@ import org.springframework.data.domain.Pageable;
 public interface UserService extends AbstractCrudService<User, Long> {
     User findByEmail(String email);
 
-    User findUserWithProductsLotsAndBidsByEmail(String email);
+    User findFullUserInfoByEmail(String email);
 
     Page<User> getAllWithPagination(Pageable pageable);
+
+    User getUserWithLikedLots(String email);
 }

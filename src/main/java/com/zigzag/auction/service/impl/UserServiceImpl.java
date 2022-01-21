@@ -22,7 +22,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User get(Long id) {
-        return userRepository.findUserByIdWithProductsLotsAndBids(id)
+        return userRepository.findFullUserInfoById(id)
                 .orElseThrow(() -> new DataProcessingException("Can't get user by id: " + id));
     }
 
@@ -54,13 +54,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User findUserWithProductsLotsAndBidsByEmail(String email) {
-        return userRepository.findUserWithProductsLotsAndBidsByEmail(email)
+    public User findFullUserInfoByEmail(String email) {
+        return userRepository.findFullUserInfoByEmail(email)
                 .orElseThrow(() -> new DataProcessingException("Can't get user by email with products: " + email));
     }
 
     @Override
     public Page<User> getAllWithPagination(Pageable pageable) {
         return userRepository.findAll(pageable);
+    }
+
+    @Override
+    public User getUserWithLikedLots(String email) {
+        return userRepository.getUserWithLikedLots(email);
     }
 }
