@@ -44,6 +44,16 @@ public class UserController {
         return userService.getAllWithPagination(pageable).map(userMapper::mapToDto);
     }
 
+    @GetMapping("/current")
+    @ApiOperation(value = "Returns current.",
+            notes = "Method to get user.")
+    @ApiPageable
+    public UserResponseDto getCurrentUser(Authentication auth) {
+        UserDetails details = (UserDetails) auth.getPrincipal();
+        User user = userService.findByEmail(details.getUsername());
+        return userMapper.mapToDto(user);
+    }
+
     @GetMapping("/{id}")
     @ApiOperation(value = "Returns user by id.",
             notes = "Method permits all users.")
